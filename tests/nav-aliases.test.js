@@ -210,10 +210,10 @@ test('a tab named before its data arrived (Servicing, Capital) opens when its da
   // A view re-rendering the open tab keeps a pick made meanwhile, and keeps a tab still held.
   shown.delete('svc'); T.showFootTab('svc'); T.showFootTab('overview'); T.refreshFootTab();
   shown.add('svc'); T.tabShown('svc');
-  assert.equal(T.getFootTab(), 'overview', 'an Overview pick meanwhile stays (census-view.js re-renders)');
+  assert.equal(T.getFootTab(), 'overview', 'an Overview pick meanwhile stays (a Labs switch re-renders)');
   shown.delete('svc'); T.showFootTab('svc'); T.refreshFootTab(); assert.equal(T.getFootTab(), 'overview');
   shown.add('svc'); T.tabShown('svc'); assert.equal(T.getFootTab(), 'svc', 'a held tab stays held through a re-render');
-  assert.match(src('js/census-view.js'), /gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\);/);
+  assert.doesNotMatch(src('js/census-view.js'), /refreshFootTab|dataset\.off/, 'the census view never switches tab: it says it is loading in place (2021 existing)');
   assert.match(src('js/labs.js'), /if \(AT && AT\.refreshFootTab\) AT\.refreshFootTab\(\);/);
   assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hasAttribute\('aria-busy'\)\) AT\(\)\.tabShown\(k\);/);
 });
@@ -277,7 +277,7 @@ test('phase 2: Allocations folds into Capacity, the model checks move to Records
 // (js/ledger-ui.js). Old links (gs=ledger), a stored Ledger pick, in-app calls (data-at="growth:ledger",
 // openTab, showFootTab, setSub) and the What's coming chip and page land on the Forecast with By period open.
 test('phase 3: the Ledger is Forecast’s By period, from a link, a stored pick, an in-app call and the What’s coming chip', () => {
-  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
+  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing', 'existing']);
   assert.deepEqual(plain(AT.migrateTabKey('growth', 'ledger')), { tab: 'growth', gSub: 'timing' });
   assert.deepEqual(plain(AT.migrateSub('growth', 'ledger')), { tab: 'growth', sub: 'timing' });
   assert.equal(AT.foldOf('growth', 'ledger'), 'period');

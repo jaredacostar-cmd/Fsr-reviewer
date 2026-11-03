@@ -1,5 +1,5 @@
 /* js/census-view.js — population outlook card +
- * the Growth tab's Census & 2051 sub-view (Phase 6 extraction).
+ * Growth › 2021 existing, the census block, and its panel (Phase 6 extraction; owner 2026-11-03).
  * Extracted verbatim from js/app.js (lines 1676-1721, 9702-9858); the only edits
  * are the reference rewrites in SPLIT_MAP.md §0 rule 4.
  */
@@ -11,6 +11,7 @@
   const D = root.PeelDemand;
   const App = () => root.PeelApp;
   const AT = () => root.PeelAnalysisTabs;
+  const PN = () => root.PeelPanel;
   const CA = () => root.PeelCensusAreas;
   const MM = () => root.PeelMapMarkers;
   const DU = () => root.PeelDemandUI;
@@ -41,8 +42,8 @@
     }));
     return { y, rows, P };
   }
-  function housingActivityHTML() {
-    const h = housingActivityRows(); if (!h) return '';
+  function housingActivityHTML(h = housingActivityRows()) {
+    if (!h) return '';
     const n = v => (v == null ? '–' : fmtNum(Math.round(v))), money = v => (v == null ? '–' : `$${fmtNum(Math.round(v / 1e6))} M`);
     const pr = h.rows.filter(r => r.app != null && r.permits);
     return `<section class="ov-card ov-activity" data-info="housing-activity"><div class="ov-h"><h3>Housing activity, ${h.y}</h3></div>
@@ -59,13 +60,14 @@
     const mof = H.mof.peel, region = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2051, 0) : null, region21 = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2021, 0) : null;
     return { mof, region, region21, y0: 2025, y1: 2051 };
   }
-  function outlookCardHTML(hideGo) {
+  // bare: without its own heading (in a fold whose summary names it: 2021 existing's panel).
+  function outlookCardHTML(hideGo, bare) {
     const o = outlookRows(); if (!o) return '';
     const ys = Object.keys(o.mof).map(Number).sort((a, b) => a - b), v = ys.map(y => o.mof[y]);
     const W = 300, H = 92, L0 = 4, R0 = 4, T0 = 8, B0 = 16, lo = Math.min(...v, o.region21 || Infinity) * 0.97, hi = Math.max(...v, o.region || 0) * 1.02;
     const x = y => L0 + (W - L0 - R0) * (y - 2021) / (2051 - 2021), yv = n => T0 + (H - T0 - B0) * (1 - (n - lo) / (hi - lo));
     const gap = o.region ? o.region - o.mof[2051] : null;
-    return `<section class="ov-card ov-outlook" data-info="outlook"><div class="ov-h"><h3>Population outlook</h3>${hideGo ? '' : '<button type="button" class="btn small link ov-go" data-ov-tab="growth">Growth →</button>'}</div>
+    return `<section class="ov-card ov-outlook" data-info="outlook">${bare ? '' : `<div class="ov-h"><h3>Population outlook</h3>${hideGo ? '' : '<button type="button" class="btn small link ov-go" data-ov-tab="growth">Growth →</button>'}</div>`}
       <svg class="ov-spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="Ministry of Finance projection for Peel against the Region's 2051 forecast">
         ${o.region ? `<line x1="${x(2021)}" y1="${yv(o.region21)}" x2="${x(2051)}" y2="${yv(o.region)}" class="sp-reg"/><circle cx="${x(2051)}" cy="${yv(o.region)}" r="3" class="sp-reg-d"/>` : ''}
         <path d="${ys.map((y, i) => `${i ? 'L' : 'M'}${x(y).toFixed(1)},${yv(v[i]).toFixed(1)}`).join('')}" class="sp-mof"/>
@@ -75,10 +77,10 @@
       <p class="small">${gap > 0 ? `The province's summer 2026 projection has Peel <strong>≈${fmtNum(roundPop(gap))} people (${Math.round(gap / o.region * 100)}%) below</strong> the Region's 2051 forecast, dipping to ${fmtNum(roundPop(o.mof[2031]))} in 2031 (fewer temporary residents) before growing again. Growth-driven DC projects may be needed later than the forecast implies; the Ministry's projection is not a planning target.` : 'The Ministry of Finance projection is in line with the Region\'s 2051 forecast.'}</p></section>`;
   }
 /* ---- app.js lines 9702-9858 ---- */
-  // ---- Census & 2051 sub-view ---------------------------------------------------------------
-  // Growth since the census, the 2051 allocation and the population
-  // outlook. Fills #growth-census-body (Worker A's pane); the pipeline body is filled
-  // by renderGrowthPipeline above.
+  // ---- Growth › 2021 existing (owner 2026-11-03: the census block, from Growth › Areas) ---------------------
+  // Growth since the census, the 2051 forecast, housing activity and the population
+  // outlook. Fills #growth-census-body, the full table of the panel growth:existing
+  // (existingPanelSpec below); the pipeline body is filled by js/growth-ui.js.
   function renderGrowthCensus() {
     const body = $('#growth-census-body'); if (!body) return;
     SvcTab().ensureSvcModel();   // (built once per change of what it is built from, not on every filter change)
@@ -86,14 +88,8 @@
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const bc = CA().baselineCensus();
     const has = !!(bc && bc.das.length && App().state.projects.length);
-    // Phase 4: census is a Growth sub-view now — hide its subtab (and leave it) when
-    // there is no census data, mirroring the old tab's show/hide.
-    // (Stage 2: it is part of Growth › Areas, under the plan tables.)
-    const gcPane = $('#pane-growth-census');
-    // (the tab again only when the pane came or went: this view can render later than a tab change,
-    // e.g. closing a site, and must not send the panel back to the remembered tab)
-    const off = has ? '' : '1';
-    if (gcPane && gcPane.dataset.off !== off) { gcPane.dataset.off = off; AT().refreshFootTab(); }
+    // (2021 existing is its own view: while the census loads it says so in place, never blank, and never
+    // switches tab; Home's view says "Loading Growth › 2021 existing…" until the panel is set)
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;
@@ -111,47 +107,96 @@
     const gr = { built: { ...gr0.built, jobs: jb.jbuilt }, approved: L.committed, proposed: L.notYet };
     const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title}`
       : [App().state.mtsa.length && PA().multiSummary('mtsa'), App().state.sp.length && PA().spSummary(), App().state.muni].filter(Boolean)[0] || 'Peel Region';
-    const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
-    const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
-    const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
-    const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
+    const share = !!(App().state.sp.length || App().state.mtsa.length);
     const tile = (label, pop, dw, sub, info, jobs) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(roundPop(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
     const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
     const start = App().timeActive() ? (App().state.yearFrom ?? App().state.yearMin) : null;
     const earliest = App().state.censuses[App().state.censuses.length - 1].year;
-    const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
+    // (js/map-census.js baselineCensus: with all years, the latest census)
+    const why = start == null ? `all years: the latest census (${Y})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
+    // The panel, worked out from the same values: its answer is the headline, its figures the four cards, its
+    // method the ⓘ line (one copy of each). Only where the view shows (an area): at a servicing scope or a
+    // selection the block still renders its hidden pane, and must not replace the area's panel, which Home reads.
+    // (the housing rows worked out once, for both)
+    const A = AT(), shows = !(A && A.hiddenAt && A.scopeKind && A.hiddenAt(A.scopeKind(), 'growth', 'existing')), hs = da ? null : housingActivityRows();
+    const spec = existingPanelSpec({ name, Y, why, base, gr, da, share, asof, censusDay: CA().censusDay(bc.date),
+      fc: shows && !da ? forecastRows(bc) : null, housing: shows ? hs : null, outlook: shows && !da ? outlookCardHTML(true, true) : '' });
     body.innerHTML = `
-      ${hlP(`Since the ${Y} Census, ${esc(name)} has added <strong>≈${fmtNum(Math.round(gr.built.population))} people</strong> in ${fmtNum(Math.round(gr.built.units))} dwellings; <strong>${fmtNum(roundPop(gr.approved.population + gr.proposed.population))} more people</strong> are committed or not committed yet in the application pipeline.`)}
+      ${hlP(spec.answer)}
       ${da ? `<div class="c-ctx"><button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(CA().daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
         <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span></div>` : ''}
-      <div class="tiles">${[
-        tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${App().state.sp.length || App().state.mtsa.length ? ', share by land area' : ''}`, 'census-base'),
-        tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
-        tile('+ Committed, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
-        tile('+ Not committed yet: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
-      ].join('')}</div>
+      <div class="tiles">${existingCards({ base, gr, Y, da, share }).map(c => tile(c.label, c.pop, c.dw, c.sub, c.info, c.jobs)).join('')}</div>
       <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
       ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('svc:network', 'Servicing › Network')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
-      ${da ? '' : housingActivityHTML() + outlookCardHTML(true)}
-      <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${CA().censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; committed = units left to build a site servicing or building permit commits (the Peel rule); not committed yet = the rest of build-out (plan approved without a permit, zoning approved, in review, pre-application); people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
+      ${da ? '' : housingActivityHTML(hs) + outlookCardHTML(true)}
+      <p class="small muted">ⓘ ${esc(name)} · ${spec.method}</p>`;
     renderGrowthChart(base, gr, Y, $('#gc-chart'));
+    if (shows && root.PeelPanel) root.PeelPanel.set('growth:existing', spec);
+  }
+
+  // The four cards, one copy for the pane's tiles and the panel's figures (pure): the census, then each layer
+  // of growth added on top of it, in people and dwellings, with the units added and the jobs where stated.
+  // share: a plan or MTSA filter (the census shared by land area).
+  function existingCards({ base, gr, Y, da, share }) {
+    const pct = (a, b) => (b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '');
+    const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
+    const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
+    const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
+    return [
+      { label: da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, pop: base.population, dw: base.dwellings, info: 'census-base',
+        sub: da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${share ? ', share by land area' : ''}` },
+      { label: '+ Built since (estimate today)', pop: nowPop, dw: nowDw, sub: `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, info: 'census-built', jobs: gr.built.jobs },
+      { label: '+ Committed, not yet built', pop: futPop, dw: futDw, sub: `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, info: 'census-approved', jobs: gr.approved.jobs },
+      { label: '+ Not committed yet: full build-out of applications', pop: allPop, dw: allDw, sub: `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, info: 'census-proposed', jobs: gr.proposed.jobs },
+    ];
+  }
+  // ---- Growth › 2021 existing as the standard panel (pure; the census block above is its full table) -------
+  // o: { name, Y, why, base, gr, da, share, asof, censusDay, fc (forecastRows), housing (housingActivityRows),
+  // outlook (outlookCardHTML(true, true)) }. No footer action of its own: an area report counts the
+  // developments shown with every filter, while this block counts the area's applications with the other
+  // filters ignored (Home: Open the map · Full table · the targets guide).
+  function existingPanelSpec(o) {
+    const { name, Y, why, base, gr, da } = o;
+    const sum = a => a[0] + a[1] + a[2];
+    const answer = `Since the ${Y} Census, ${esc(name)} has added <strong>≈${fmtNum(Math.round(gr.built.population))} people</strong> in ${fmtNum(Math.round(gr.built.units))} dwellings; <strong>${fmtNum(roundPop(gr.approved.population + gr.proposed.population))} more people</strong> are committed or not committed yet in the application pipeline.`;
+    const method = `${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${esc(o.censusDay || '')})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; committed = units left to build a site servicing or building permit commits (the Peel rule); not committed yet = the rest of build-out (plan approved without a permit, zoning approved, in review, pre-application); people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(o.asof || '–')}</strong>.`;
+    const figures = existingCards(o).map(c => ({ v: fmtNum(Math.round(c.pop)), u: 'people', label: c.label,
+      ctx: `${fmtNum(Math.round(c.dw))} dwellings · ${c.sub}${c.jobs > 0 ? ` · +${fmtNum(roundPop(c.jobs))} jobs` : ''}`, attrs: { 'data-full-table': 'growth' } }));
+    // (the rows are built from data: their names escaped, PeelPanel.kv writes its label as given)
+    const fcRows = !da && o.fc ? o.fc.map(r => PN().kv(esc(r.m), `${fmtNum(roundPop(sum(r.p)))} of ${fmtNum(roundPop(r.fp))} people (${r.fp > 0 ? `${Math.round(sum(r.p) / r.fp * 100)}%` : '–'}) · ${r.fp > sum(r.p) ? `${fmtNum(roundPop(r.fp - sum(r.p)))} still to plan for` : `exceeds by ${fmtNum(roundPop(sum(r.p) - r.fp))}`}`)) : [];
+    const h = !da && o.housing ? o.housing : null, n = v => (v == null ? '–' : fmtNum(Math.round(v)));
+    const haRows = h ? h.rows.map(r => PN().kv(esc(r.m), `${n(r.starts)} starts · ${n(r.completions)} completions · ${n(r.permits)} permit units`)) : [];
+    return {
+      calc: true, fullTitle: `Growth › 2021 existing · ${name}: the ${Y} Census, built since, committed and not committed yet; the 2051 forecast, housing activity and the population outlook`,
+      head: PN().areaHead('Growth › 2021 existing', 'What has been built since the census, and what is still to come?', null, `${esc(name)} · ${Y} Census baseline${Y !== 2021 ? ` (${esc(why)})` : ''}`),
+      answer, figures,
+      chart: `<div class="growth-chart" data-info="growth-bars">${growthChartHTML(base, gr, Y)}</div>`,
+      lists: [
+        { title: 'Against the 2051 forecast', rows: fcRows, total: fcRows.length, seeAll: { 'data-full-table': 'growth', 'data-ft-go': 'Applications against the 2051 forecast' } },
+        ...(h ? [{ title: `Housing activity, ${h.y}`, rows: haRows, total: haRows.length, seeAll: { 'data-full-table': 'growth', 'data-ft-go': 'Housing activity' } }] : []),
+      ],
+      folds: !da && o.outlook ? [{ title: 'Population outlook', html: o.outlook }] : [],
+      method,
+      sources: 'Statistics Canada 2021 Census (2016 when the timeline starts before 2021), dissemination areas; the building permits and applications on the map; Region of Peel Land Needs Assessment (draft 2051 allocation, August 2024); Region of Peel housing activity (CMHC) and building permits; Ontario Ministry of Finance projections (summer 2026).',
+    };
   }
 
   // Growth in the application pipeline against the 2051 growth allocated to each
   // municipality (Peel Land Needs Assessment, draft municipal allocation): how much of
   // the forecast growth is already built, approved or proposed, and how much is still
-  // to be planned for. Slimmed for the Census & 2051 sub-view: one compact table with
+  // to be planned for. Slimmed for Growth › 2021 existing: one compact table with
   // the full built / approved / proposed split behind "See all".
-  function forecastTableHTML(bc) {
+  // The rows (one copy of the sums: the table and the panel's list): each municipality, Peel last; null with
+  // no forecast or at a DA.
+  function forecastRows(bc) {
     const F = App().state.reports && App().state.reports.forecast2051;
-    if (!F || App().state.daCtx) return '';
+    if (!F || App().state.daCtx) return null;
     const munis = Object.keys(F.municipalities).filter(m => !App().state.muni || m === App().state.muni);
-    const pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
     const rows = munis.map(m => {
       const f = F.municipalities[m], projects = App().state.projects.filter(p => p.municipality === m && p.phase !== 'cancelled');
       const gr = PeelAreas.growthSince(projects, { muni: m }, bc.date, App().state.criteria), j = SvcTab().svcJobs(projects, bc.date);
@@ -159,6 +204,12 @@
         p: [gr.built.population, gr.approved.population, gr.proposed.population], u: [gr.built.units, gr.approved.units, gr.proposed.units], j: [j.jbuilt, j.japproved, j.jproposed] };
     });
     if (munis.length > 1) rows.push(rows.reduce((t, r) => ({ m: 'Peel', fp: t.fp + r.fp, fu: t.fu + r.fu, fj: t.fj + r.fj, p: t.p.map((v, i) => v + r.p[i]), u: t.u.map((v, i) => v + r.u[i]), j: t.j.map((v, i) => v + r.j[i]) }), { fp: 0, fu: 0, fj: 0, p: [0, 0, 0], u: [0, 0, 0], j: [0, 0, 0] }));
+    return rows;
+  }
+  function forecastTableHTML(bc) {
+    const rows = forecastRows(bc); if (!rows) return '';
+    const F = App().state.reports.forecast2051;
+    const pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
     const sum = a => a[0] + a[1] + a[2];
     const uU = n => unit(fmtNum(Math.round(n)), 'units'), uJ = n => unit(fmtNum(Math.round(n)), 'jobs');
     const main = rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td>${uPop(r.fp)}</td><td>${uPop(sum(r.p))}<small>${pct(sum(r.p), r.fp)} of 2051 growth</small></td><td class="bo">${r.fp > sum(r.p) ? uPop(r.fp - sum(r.p)) : `<span class="over">exceeds by ${uPop(sum(r.p) - r.fp)}</span>`}</td></tr>`).join('');
@@ -176,8 +227,13 @@
   // layer order, so there is no second axis. Values are direct-labelled in the legend.
   // el: the container (the Pipeline sub-view renders a copy with no census baseline).
   // One label, one definition (SPEC 1.9): opt.builtLabel names a narrower "built since" (the
-  // developments shown) apart from the Census view's every completed permit.
+  // developments shown) apart from 2021 existing's every completed permit.
+  // growthChartHTML: the chart's HTML (pure; 2021 existing's panel draws it too).
   function renderGrowthChart(base, gr, Y = 2021, el, opt = {}) {
+    const target = el || $('#c-chart');
+    if (target) target.innerHTML = growthChartHTML(base, gr, Y, opt);
+  }
+  function growthChartHTML(base, gr, Y = 2021, opt = {}) {
     const layers = [
       { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
       { key: 'built', label: opt.builtLabel || `Built since ${Y} (every permit completed since census day)`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
@@ -198,8 +254,7 @@
     };
     const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
       <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings${l.key === 'base' ? '' : ` · +${fmtNum(roundPop(l.jobs))} jobs`}</span></li>`).join('');
-    const target = el || $('#c-chart');
-    if (target) target.innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
+    return `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
       <ul class="grow-legend">${legend}</ul><div class="grow-tip" hidden></div>`;
   }
   // Hover / tap tooltip for the growth bars (delegated: both growth sub-views render a chart).
@@ -267,7 +322,8 @@
     const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
     return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Data checks')}</p>`;
   }
-  const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
+  const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML,
+    growthChartHTML, forecastRows, existingCards, existingPanelSpec };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCensusView = api;
 })(typeof window !== 'undefined' ? window : globalThis);

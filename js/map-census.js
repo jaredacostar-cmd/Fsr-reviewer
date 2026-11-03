@@ -142,8 +142,8 @@
 
   // ---- Growth since the census (selected geography) ---------------------------------------
   // The baseline follows the timeline: the latest census held in or before its first year
-  // (2021–2026 → 2021 Census; 2018–2026 → 2016 Census). Before the earliest census with data,
-  // or with all years, the earliest one.
+  // (2021–2026 → 2021 Census; 2018–2026 → 2016 Census). With all years, the latest; before the
+  // earliest census with data, the earliest.
   function baselineCensus() {
     if (!App() || !App().state) return null;
     const cs = App().state.censuses || [];

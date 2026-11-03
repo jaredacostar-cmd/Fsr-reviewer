@@ -474,7 +474,7 @@ How the estimate works:
   per apartment or unstated unit, and marked “est.”. For completed / remaining / left-to-build
   figures the site area is split by share of units. **Peak wet weather = Harmon dry-weather
   peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
-  since 2021 in Growth › Areas' full table (the census view).
+  since 2021 in Growth › 2021 existing.
 - **Employment demand:** jobs estimated from the floor areas on the applications (see
   Employment uses) × 250 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
   peaked with Harmon on the employee count, kept between 2 and 4; I&I is added on the boundary

@@ -108,7 +108,9 @@ test('Home hosts every area view: the page builder where a page adds to the pane
     foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' } } } };
   const pipe = { head: { name: 'What is in the pipeline?' }, answer: 'Pipeline answer', lists: [], foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } } } };
   const proj = { head: { name: 'What is being built?' }, answer: 'Projects answer', lists: [], foot: { primary: { label: 'Show them on the map', attrs: { 'data-pnl-ce-map': 'cons' } }, secondary: [{ label: 'CSV: every contract', attrs: { 'data-ce-cap-csv': '' } }] } };
-  const panels = { 'svc:network': net, 'records:checks': checks, 'growth:pipeline': pipe, 'dca:projects': proj };
+  // (Growth › 2021 existing, owner 2026-11-03: the map's panel, no footer action of its own)
+  const existing = { head: { name: 'What has been built since the census, and what is still to come?' }, answer: '2021 existing answer', lists: [] };
+  const panels = { 'svc:network': net, 'records:checks': checks, 'growth:pipeline': pipe, 'dca:projects': proj, 'growth:existing': existing };
   const S = load().SE;
   for (const [key, v] of Object.entries(S.VIEWS.area)) {
     const L = load({ key, panels }), m = L.WP.host(), s = strip(m.tabs), [tab, sub] = key.split(':');
@@ -116,7 +118,8 @@ test('Home hosts every area view: the page builder where a page adds to the pane
     assert.equal(s.on, tab, key); assert.equal(s.view, sub || null, key);
     if (v.keys) {
       assert.equal(m.answer, panels[key].answer, `${key}: the stored panel’s answer`);
-      assert.deepEqual(plain(m.actions[0]), { ...plain(panels[key].foot.primary), primary: true }, `${key}: its footer’s own action first`);
+      if (panels[key].foot) assert.deepEqual(plain(m.actions[0]), { ...plain(panels[key].foot.primary), primary: true }, `${key}: its footer’s own action first`);
+      else assert.equal(m.actions[0].label, 'Open the map', `${key}: no footer action of its own`);
       assert.deepEqual(plain(m.actions.map(a => a.label)).slice(-2), ['Open the map', 'Full table']);
       assert.match(m.eyebrow, new RegExp(`^${L.W.tabPath(tab, sub)} · Peel$`), `${key}: named by the tabs’ words`);
     }

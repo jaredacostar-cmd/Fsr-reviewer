@@ -37,8 +37,8 @@ test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page bui
   const S = load({});
   assert.equal(S.AREA, undefined);
   // (navigation phase 6c: Servicing › Old pipes, drawn by the Old pipes page builder: the panel's spec, its small map)
-  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'svc:pipes', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
-  assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['svc:pipes', 'pipes', ''], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
+  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'growth:existing', 'svc:capacity', 'svc:network', 'svc:pipes', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
+  assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['growth:existing', 'growth:existing', 'growth'], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['svc:pipes', 'pipes', ''], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
   for (const v of Object.values(S.VIEWS.area)) assert.ok(!!v.page !== !!v.keys, 'a page builder or a panel, never both');
   // (navigation phase 7: each view its question, ASK, none extra: Help › What each tab answers)
   assert.deepEqual(Object.keys(S.ASK), Object.keys(S.VIEWS.area));
@@ -49,7 +49,7 @@ test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page bui
 test('every view of Home has its question, the one Home heads it with', () => {
   const S = load({}), W = require('../js/workspaces.js');
   const src = f => require('node:fs').readFileSync(require('node:path').join(__dirname, '..', f), 'utf8');
-  const builders = src('js/ws-pages.js') + src('js/workspaces.js'), panels = ['js/growth-ui.js', 'js/svc-capacity.js', 'js/capital-ea.js', 'js/records-tab.js'].map(src).join('\n');
+  const builders = src('js/ws-pages.js') + src('js/workspaces.js'), panels = ['js/growth-ui.js', 'js/census-view.js', 'js/svc-capacity.js', 'js/capital-ea.js', 'js/records-tab.js'].map(src).join('\n');
   for (const [k, v] of Object.entries(S.VIEWS.area)) {
     const q = S.ASK[k], [t, sub] = k.split(':');
     assert.match(q, /^[A-Z][^?]*\?$/, k);

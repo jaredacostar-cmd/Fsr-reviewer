@@ -90,8 +90,8 @@ test('phone: the map\'s way back sits above the bottom sheet, where it can be ta
   assert.match(rb.slice(i, rb.indexOf('\n  }\n', i)), /bar\.hidden = !on;[\s\S]+const A = App\(\); if \(A && A\.getAnalysisSnap && A\.getAnalysisSnap\(\) === 'full'\) A\.setAnalysisSnap\('full', false\);$/);
 });
 
-test('the Census view switches tab only when its pane comes or goes (it can render after a tab change)', () => {
+test('the census view (Growth › 2021 existing) never switches tab: it says it is loading in place', () => {
   const cv = src('js/census-view.js');
-  assert.match(cv, /if \(gcPane && gcPane\.dataset\.off !== off\) \{ gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\); \}/);
+  assert.doesNotMatch(cv, /refreshFootTab|dataset\.off/);
   assert.doesNotMatch(cv, /\n    AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\);\n/, 'no unconditional switch back to the remembered tab');
 });

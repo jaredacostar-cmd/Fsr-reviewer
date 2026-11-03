@@ -209,7 +209,11 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   assert.match(now('Plants & capacity'), /Servicing › Capacity/);
   assert.match(now('Pressure zones'), /Servicing › Network/);
   assert.match(now('Water › Facilities'), /Servicing › Network/);
-  assert.match(now('Census & 2051'), /Growth › Areas/);
+  // (owner 2026-11-03: the census block is Growth › 2021 existing; By plan, the plan areas, is still Areas)
+  assert.match(now('Census & 2051'), /Growth › 2021 existing/);
+  assert.match(now('By plan'), /Growth › Areas/);
+  assert.match(now('census part'), /Growth › 2021 existing, on Home and the map/);
+  assert.match(now('census part'), /Growth › Areas is the plan areas only/);
   assert.match(now('Capital › Construction'), /Capital › Projects/);
   // Navigation phase 3: the Ledger is the Forecast's By period; What's coming opens it there.
   assert.match(now('Growth › Ledger'), /Growth › Forecast/);
@@ -227,7 +231,7 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' \}/);
   assert.match(at, /water: \{ capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' \}/);
   assert.match(at, /dca: \{ timing: 'timing', build: 'projects'/);
-  assert.match(at, /growth: \{ pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' \}/);
+  assert.match(at, /growth: \{ pipeline: 'pipeline', census2051: 'existing', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing', existing: 'existing' \}/);
   // In Help: its own card and a button at the top; old tab names gone from the guides.
   assert.match(tips, /<details class="help-card help-moved" id="help-moved"><summary><strong>What moved where<\/strong>/);
   assert.match(tips, /data-help-moved>What moved where<\/button>/);

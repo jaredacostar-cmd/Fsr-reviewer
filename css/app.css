@@ -997,7 +997,8 @@ h2.label, .label { font-size: var(--fs-2); text-transform: none; letter-spacing:
 .grow-legend li { display: flex; align-items: center; gap: var(--space-2); }
 .grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .gsw { display: inline-block; width: 12px; height: 12px; border-radius: 4px; }
-.grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: var(--fs-2); padding: var(--space-1) var(--space-2); border-radius: 4px; white-space: nowrap; z-index: 5; }
+/* (it wraps at 220 px, the box census-view.js places it for: a tapped bar never makes a phone's panel scroll sideways) */
+.grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: var(--fs-2); padding: var(--space-1) var(--space-2); border-radius: 4px; white-space: normal; max-width: 220px; z-index: 5; }
 
 /* Growth tab (Phase 4): completions-per-year strip and the "See all" expander. */
 .cc-strip { display: flex; align-items: flex-end; gap: 3px; height: 64px; margin: var(--space-2) 0 var(--space-1); }
@@ -2967,6 +2968,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
    map's chips under its tabs: a second, lighter row that scrolls sideways like the bar on a phone. */
 .page-secs + .page-subsecs { margin-top: calc(-1 * var(--space-2)); border-bottom: 0; }
 .page-subsecs .page-sec { font-weight: 400; }
+/* (a phone: Growth's four views, Pipeline · Areas · Forecast · 2021 existing, show without a swipe) */
+@media (max-width: 700px) { .page-subsecs .page-sec { padding-left: var(--space-2); padding-right: var(--space-2); } }
 /* The page host's strip (navigation phase 6, js/ws-pages.js tabsHTML): the map's five tabs under a page's
    header, heavier than the views row under it; a tab before its data says so
    (one sideways-scrolling row on a phone, the open tab scrolled into it: the word shrinks to "…"). */

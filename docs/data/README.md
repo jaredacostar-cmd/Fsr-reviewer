@@ -29,8 +29,8 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - The Ministry of Finance 2025–2051 projection for the Peel census division.
 
   These feed:
-  - The **Population outlook** card in Growth › Areas' full table: the Ministry of Finance
-    projection against the Region's 2.28 M forecast for 2051.
+  - The **Population outlook** card in Growth › 2021 existing (its panel's fold and its full table): the Ministry
+    of Finance projection against the Region's 2.28 M forecast for 2051.
   - The briefing.
   - New checks in **Records › Data checks** (*The model against published figures*): units
     completed against CMHC completions, the approved build pace against CMHC starts, and
@@ -129,7 +129,7 @@ cover the same thing, one copy is kept.
   - Peel's copy of the provincial network (`Watercourse_GTA`) duplicates the Ontario Hydro
     Network and isn't used.
 
-**Housing activity** (Growth › Areas) shows the latest full year for each municipality and
+**Housing activity** (Growth › 2021 existing) shows the latest full year for each municipality and
 Peel: starts and completions (with 5-year averages), units absorbed, and permit units and value.
 A check line sets the units on this app's own permit records issued that year against the
 Region's count.

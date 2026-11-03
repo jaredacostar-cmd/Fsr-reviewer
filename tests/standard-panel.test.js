@@ -72,7 +72,7 @@ test('1. every panel goes through the builder, and every tab has a panel slot', 
   for (const t of ['overview', 'growth', 'svc', 'dca', 'records']) assert.match(src('index.html'), new RegExp(`id="pnl-${t}"`), t);
   // The panels set in each tab (key → the file that sets it).
   const SETS = {
-    'overview:': 'js/overview-tab.js', 'growth:pipeline': 'js/growth-ui.js', 'growth:areas': 'js/plan-tables.js', 'growth:timing': 'js/timing.js',
+    'overview:': 'js/overview-tab.js', 'growth:pipeline': 'js/growth-ui.js', 'growth:areas': 'js/plan-tables.js', 'growth:timing': 'js/timing.js', 'growth:existing': 'js/census-view.js',
     'svc:capacity': 'js/svc-capacity.js', 'svc:network': 'js/svc-capacity.js', 'svc:pipes': 'js/svc-capacity.js', 'svc:fsr': 'js/svc-capacity.js',
     'dca:timing': 'js/dca-tab.js', 'dca:projects': 'js/dca-tab.js', 'dca:eas': 'js/dca-tab.js',
     'records:files': 'js/records-tab.js',
