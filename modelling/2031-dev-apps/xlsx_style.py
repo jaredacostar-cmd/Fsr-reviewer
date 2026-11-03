@@ -8,6 +8,7 @@ BOLD = Font(name=FONT, size=10, bold=True)
 TITLE = Font(name=FONT, size=14, bold=True)
 SUB = Font(name=FONT, size=10, italic=True, color='555555')
 INPUT = Font(name=FONT, size=10, color='0000FF')          # transcribed / hard-coded value
+GREY = Font(name=FONT, size=10, italic=True, color='808080')   # excluded / inactive row
 LINK = Font(name=FONT, size=10, color='008000')           # link to another sheet
 HEAD_FILL = PatternFill('solid', fgColor='1F3864')
 HEAD_FONT = Font(name=FONT, size=10, bold=True, color='FFFFFF')

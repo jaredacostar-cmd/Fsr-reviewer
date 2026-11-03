@@ -110,6 +110,60 @@ def write_about(ws, n):
             ws.row_dimensions[c.row].height = 15 * max(1, -(-len(str(c.value or '')) // 105))
 
 
+def write_points_by_area(ws, labels):
+    """One block of columns per priority area listing its application points (Bucket 2 assignment)."""
+    from build_areas import prepare          # here, not at the top: build_areas imports this module
+    from openpyxl.styles import Alignment
+    from openpyxl.utils import get_column_letter
+    st = prepare()
+    ws.title = 'Points by Area'
+    ws['A1'] = 'Development application points in each priority area'
+    ws['A1'].font = X.TITLE
+    ws['A2'] = ('One block of columns per area, largest population first. Assigned by location (Bucket 2). '
+                'Grey rows were removed as duplicates (decisions D11 / D16). Populations are full build-out, before the share built by 2031. '
+                'Totals are formulas; "All points" should equal the map label except where noted.')
+    ws['A2'].font = X.SUB
+    grey = X.GREY
+    labs = sorted(labels, key=lambda r: r['map_order'])
+    per = {lab['area_name']: sorted([a for a in st['apps'] if a['_area'] == lab['area_name']],
+                                    key=lambda a: -a['Population']) for lab in labs}
+    depth = max(len(v) for v in per.values())
+    HEAD, SUB_H, FIRST = 4, 5, 10             # area name, column headers, totals in rows 6-9, data from row 10
+    for i, lab in enumerate(labs):
+        c0 = 1 + i * 3
+        A, P, Y = (get_column_letter(c0 + k) for k in range(3))
+        ws.merge_cells(start_row=HEAD, start_column=c0, end_row=HEAD, end_column=c0 + 2)
+        h = ws.cell(HEAD, c0, lab['area_name'])
+        h.font, h.fill, h.alignment = X.HEAD_FONT, X.HEAD_FILL, Alignment(horizontal='center', vertical='center')
+        for k, t in enumerate(['Application (file number)', 'Population', 'Kept? (duplicates removed)']):
+            cell = ws.cell(SUB_H, c0 + k, t)
+            cell.font, cell.fill, cell.border = X.HEAD_FONT, X.HEAD_FILL, X.BOX
+            cell.alignment = Alignment(wrap_text=True, vertical='center')
+        ws.column_dimensions[A].width = 26
+        ws.column_dimensions[P].width = 11
+        ws.column_dimensions[Y].width = 13
+        last = FIRST + depth - 1
+        rows = [('Points', f'=COUNTA({A}{FIRST}:{A}{last})', '0'),
+                ('All points', f'=SUM({P}{FIRST}:{P}{last})', '#,##0'),
+                ('Kept (duplicates removed)', f'=SUMIF({Y}{FIRST}:{Y}{last},"Yes",{P}{FIRST}:{P}{last})', '#,##0'),
+                ('Map label', lab['population'], '#,##0')]
+        for k, (t, f, fmt) in enumerate(rows):
+            r = 6 + k
+            X.body(ws.cell(r, c0, t), X.BOLD)
+            X.body(ws.cell(r, c0 + 1, f), X.INPUT if k == 3 else X.BOLD, fmt).fill = X.TOTAL_FILL
+            ws.cell(r, c0).fill = X.TOTAL_FILL
+        for j, a in enumerate(per[lab['area_name']]):
+            r = FIRST + j
+            label = a['id'] + (f" ({a['File_numbe']})" if a.get('File_numbe') else '')
+            font = X.INPUT if a['_include'] == 'Yes' else grey
+            X.body(ws.cell(r, c0, label), font)
+            X.body(ws.cell(r, c0 + 1, a['Population']), font, '#,##0')
+            X.body(ws.cell(r, c0 + 2, a['_include']), font)
+    ws.row_dimensions[SUB_H].height = 42
+    ws.freeze_panes = ws.cell(FIRST, 1)
+    return sum(len(v) for v in per.values())
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--labels', default=os.path.join(HERE, 'private', 'map_labels.csv'))
@@ -119,6 +173,10 @@ def main():
     wb = Workbook()
     write_map_sheet(wb.active, labels)
     write_about(wb.create_sheet(), len(labels))
+    if os.path.exists(os.path.join(HERE, 'private', 'map_boxes.json')):   # after Bucket 2 has run
+        n = write_points_by_area(wb.create_sheet(), labels)
+        wb.move_sheet('Points by Area', offset=-1)
+        print(f'  Points by Area: {n} application points')
     for ws in wb.worksheets:
         X.print_fit(ws)
     wb.save(a.out)
