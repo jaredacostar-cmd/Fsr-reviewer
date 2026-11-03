@@ -177,6 +177,45 @@ def duplicate_candidates(apps, pairs):
     return out
 
 
+def _clearly_one(v):
+    """D11: a pair is clearly one development if it shares a file number, has the same area, or is a
+    pre-consultation followed by another application at the same place."""
+    if any(w.startswith(('Shared file number', 'Same area')) for w in v['why']):
+        return True
+    pre = [(x.get('Category') or '').startswith('PRECON') for x in (v['a'], v['b'])]
+    return 'Same location' in v['why'] and any(pre) and not all(pre)
+
+
+def _newer(a, b):
+    """The newer of two rows by application year, then received date when both have one; None if tied."""
+    ya, yb = a.get('Applicatio') or '', b.get('Applicatio') or ''
+    if ya and yb and ya != yb:
+        return a if ya > yb else b
+    ra, rb = a.get('Received_D'), b.get('Received_D')
+    if ya == yb and ra and rb and ra != rb:
+        return a if ra > rb else b
+    return None
+
+
+def resolve_d11(cands, apps):
+    """Apply decision D11 to each candidate pair; mark dropped rows on the applications."""
+    for a in apps:
+        a['_include'], a['_excl'] = 'Yes', None
+    for v in cands:
+        if not _clearly_one(v):
+            v['d11'] = 'To app check (Bucket 3): may be separate developments'
+            continue
+        new = _newer(v['a'], v['b'])
+        if new is None:
+            v['d11'] = 'To app check (Bucket 3): dates tied'
+            continue
+        old = v['b'] if new is v['a'] else v['a']
+        v['d11'] = f"Keep {new['id']}, drop {old['id']} (older)"
+        if old['_include'] == 'Yes':
+            old['_include'] = 'No'
+            old['_excl'] = f"Older duplicate of {new['id']} (decision D11)"
+
+
 # ---------------------------------------------------------------- check map
 
 def check_map(pdf, boxes, apps, names, colour, out_png, dpi=150):
@@ -255,8 +294,10 @@ def sheet_readme(ws, boxes, n_apps, counts):
                          "outlines (2021 census areas, accurate to about 60 m; not legal boundaries). Points closer "
                          f"than {MUNI_NEAR_M} m to a boundary are noted."),
         ('Duplicate candidates', 'Pairs that may be the same development: same location (from Bucket 1), a shared '
-                                 'file number, or the same area in the same priority area. Not removed: each is '
-                                 'checked against the app in Bucket 3 (decision D09).'),
+                                 'file number, or the same area in the same priority area. Decision D11: where a pair '
+                                 'is clearly one development and the dates say which is newer, the older row is '
+                                 'excluded from the 2031 total (kept on the sheet, marked). The rest go to the app '
+                                 'check in Bucket 3.'),
         ('Colours', 'Blue = value from the shapefile or map. Black = formula. Yellow = reviewer fills in.'),
         ('Sheets', 'Area Summary, Applications, Exceptions, Duplicate Candidates, Check Map, Decisions.'),
     ]
@@ -283,6 +324,7 @@ APP_COLS = [
     ('Category', 'Application category', 26, None), ('_address', 'Address', 26, None),
     ('Population', 'Population', 11, '#,##0'), ('Area', 'Area (ha)', 10, '#,##0.00'),
     ('_area', 'Priority area', 22, None), ('_method', 'How assigned', 34, None),
+    ('_include', 'Include in 2031 total?', 11, None), ('_excl', 'Why excluded', 34, None),
     ('MUNICIPALI', 'Municipality (file)', 14, None), ('_muni_loc', 'Municipality (location)', 14, None),
     ('_muni', 'Municipality used', 14, None), ('_muni_note', 'Municipality note', 40, None),
     ('_lon', 'Longitude', 11, '0.00000'), ('_lat', 'Latitude', 11, '0.00000'),
@@ -307,13 +349,14 @@ def sheet_summary(ws, labels, apps, col, decisions):
     ws['A1'] = 'Priority areas: applications against the map labels'
     ws['A1'].font = X.TITLE
     ws['A2'] = ('Applications, population and area are formulas on the Applications sheet. '
-                'The last column is the full population that goes forward to the 2031 assumptions (Bucket 4).')
+                'Population carried forward leaves out rows excluded as older duplicates (decision D11); '
+                'it is the full population that goes on to the 2031 assumptions (Bucket 4).')
     ws['A2'].font = X.SUB
     cols = ['#', 'Priority area', 'Applications', 'Population (applications)', 'Area ha (applications)',
             'Population (map)', 'Area ha (map)', 'Population: map minus applications', 'Area: map minus applications',
             'Status', 'Explanation', 'Population carried forward', 'Reviewer agrees? (Y/N)', 'Reviewer comment']
     X.header(ws, 4, cols, [5, 22, 12, 13, 12, 12, 11, 14, 13, 11, 60, 13, 12, 30])
-    A, P, H = col['_area'], col['Population'], col['Area']
+    A, P, H, I = col['_area'], col['Population'], col['Area'], col['_include']
     rng = lambda c: f'Applications!${c}$2:${c}${len(apps) + 1}'   # noqa: E731
     dec_area = {d['area']: d for d in decisions if d.get('area')}
     first = 5
@@ -340,6 +383,9 @@ def sheet_summary(ws, labels, apps, col, decisions):
                        + 'The application rows are what goes forward.')
         else:
             status, why = 'Differs', 'Area does not match the label; check the assignment.'
+        dropped = [a['id'] for a in members if a['_include'] != 'Yes']
+        if dropped:
+            why += f" Carried forward leaves out {', '.join(dropped)} (older duplicates, D11)."
         edge = [a['id'] for a in members if a['_method'] != 'Inside box']
         if edge:
             why += f" Includes {', '.join(edge)}, just outside the box edge."
@@ -354,7 +400,7 @@ def sheet_summary(ws, labels, apps, col, decisions):
         X.body(ws.cell(r, 9, f'=G{r}-E{r}'), fmt='0.00;-0.00;-')
         X.body(ws.cell(r, 10, status)).fill = X.SEV_FILL['Low'] if status == 'Matches' else X.SEV_FILL['Medium']
         X.body(ws.cell(r, 11, why), wrap=True)
-        X.body(ws.cell(r, 12, f'=D{r}'), fmt='#,##0')
+        X.body(ws.cell(r, 12, f'=SUMIFS({rng(P)},{rng(A)},B{r},{rng(I)},"Yes")'), fmt='#,##0')
         for c in (13, 14):
             X.body(ws.cell(r, c)).fill = X.REVIEW_FILL
         ws.row_dimensions[r].height = 15 * max(1, math.ceil(len(why) / 62))
@@ -403,29 +449,30 @@ def sheet_duplicates(ws, cands):
     ws['A1'] = 'Pairs that may be the same development (checked against the app in Bucket 3)'
     ws['A1'].font = X.TITLE
     ws['A2'] = ('If a pair is one development (e.g. a resubmission), the smaller population is counted twice. '
-                'Nothing has been removed (decision D09).')
+                'Decision D11 column: older rows excluded where clear; the rest go to the app check.')
     ws['A2'].font = X.SUB
     cols = ['#', 'Why flagged', 'Row A', 'File A', 'Population A', 'Area A (ha)', 'Row B', 'File B',
             'Population B', 'Area B (ha)', 'Distance (m)', 'Priority area', 'Overcount if one replaces the other',
-            'New since Bucket 1?', 'Bucket 3 finding']
-    X.header(ws, 4, cols, [5, 34, 9, 20, 11, 10, 9, 20, 11, 10, 10, 20, 14, 11, 34])
+            'New since Bucket 1?', 'Decision D11', 'Bucket 3 finding']
+    X.header(ws, 4, cols, [5, 34, 9, 20, 11, 10, 9, 20, 11, 10, 10, 20, 14, 11, 30, 34])
     for n, v in enumerate(cands, 5):
         a, b = v['a'], v['b']
         vals = [n - 4, '; '.join(v['why']), a['id'], a.get('File_numbe') or None, a['Population'], a['Area'],
                 b['id'], b.get('File_numbe') or None, b['Population'], b['Area'], round(v['dist_m']),
                 a['_area'] if a['_area'] == b['_area'] else f"{a['_area']} / {b['_area']}", f'=MIN(E{n},I{n})',
-                'No' if 'Same location' in v['why'] else 'Yes', None]
-        fmts = [None, None, None, None, '#,##0', '0.00', None, None, '#,##0', '0.00', '#,##0', None, '#,##0', None, None]
+                'No' if 'Same location' in v['why'] else 'Yes', v['d11'], None]
+        fmts = [None, None, None, None, '#,##0', '0.00', None, None, '#,##0', '0.00', '#,##0', None, '#,##0', None, None,
+                None]
         for c, (val, fmt) in enumerate(zip(vals, fmts), 1):
-            cell = X.body(ws.cell(n, c, val), X.BOLD if c in (3, 7) else X.BASE, fmt, wrap=(c in (2, 15)))
-            if c == 15:
+            cell = X.body(ws.cell(n, c, val), X.BOLD if c in (3, 7) else X.BASE, fmt, wrap=(c in (2, 15, 16)))
+            if c == 16:
                 cell.fill = X.REVIEW_FILL
         ws.row_dimensions[n].height = 15 * max(1, math.ceil(len(vals[1]) / 32))
     last = 4 + len(cands)
     t = last + 1
     X.body(ws.cell(t, 12, 'Most that could be double counted'), X.BOLD, wrap=True)
     X.body(ws.cell(t, 13, f'=SUM(M5:M{last})'), X.BOLD, '#,##0')
-    for c in range(1, 16):
+    for c in range(1, 17):
         ws.cell(t, c).fill = X.TOTAL_FILL
     ws.freeze_panes = 'C5'
 
@@ -447,6 +494,7 @@ def main():
     municipalities(apps, json.load(open(a.munis)))
     _, pairs = find_issues(apps, meta)
     cands = duplicate_candidates(apps, pairs)
+    resolve_d11(cands, apps)
 
     colour = {lab['area_name']: PALETTE[i % len(PALETTE)]
               for i, lab in enumerate(sorted(labels, key=lambda r: r['map_order']))}
