@@ -29,6 +29,7 @@ private/
   exclusions.csv, stated_units.csv          checkpoint exclusions; unit totals stated in the Region text
   Bucket4_Assumptions.xlsx                  built by build_assumptions.py
   Planning_Review_2031.xlsx                 built by build_review.py: the workbook Planning reviews
+  App_Estimate_2031.xlsx                    built by build_app_estimate.py: the app's own estimate (side, proof of concept)
 ```
 
 ## Buckets
@@ -56,6 +57,7 @@ python3 build_areas.py
 python3 build_app_check.py      # needs Node 18+; reads the app's data/ read-only
 python3 build_assumptions.py
 python3 build_review.py          # the single workbook for Planning
+python3 build_app_estimate.py    # side workbook: the app's own 2031 estimate
 ```
 
 **How the area assignment works.** The map PDF is vector: each priority area is a dark-red

@@ -33,6 +33,20 @@ PHASE_SHARE = [('Pre-application', 0.15), ('In review', 0.40), ('Plan approved',
 AREA_DEFAULT = 1.0          # D27: today's assumption, every application population is the 2031 figure
 LIMIT_ON, LIMIT_RATE, LIMIT_FROM, LIMIT_TO = 'No', 300, 2026, 2031
 WITHDRAWN = 'Withdrawn / cancelled'
+
+# Two uses of the same sheets. 'planning' (default, D27): every area starts at today's assumption and
+# Planning gives its estimate. 'app' (proof of concept, build_app_estimate.py): the app's own estimate,
+# from the stage of each development in the app and the build-out speed limit; rows the app cannot
+# confirm keep today's figure.
+MODE = {'name': 'planning'}
+
+
+def set_mode(name):
+    MODE['name'] = name
+
+
+def app_mode():
+    return MODE['name'] == 'app'
 TOP_N = 15
 
 
@@ -74,12 +88,17 @@ def sheet_assumptions(ws, labels):
                          'total use that total.'), wrap=True)
 
     # B. share by app phase
-    X.header(ws, 10, ['B. Reference only: share suggested by the app stage', 'Share', '', 'Note'])
+    X.header(ws, 10, ['B. Share built by 2031, by the stage of the development in the app' if app_mode() else
+                      'B. Reference only: share suggested by the app stage', 'Share', '', 'Note'])
     for i, (ph, share) in enumerate(PHASE_SHARE):
         r = 11 + i
         X.body(ws.cell(r, 1, ph), X.BOLD)
-        X.body(ws.cell(r, 2, share), X.INPUT, '0%')
+        if app_mode():
+            yellow(ws.cell(r, 2, share), '0%')
+        else:
+            X.body(ws.cell(r, 2, share), X.INPUT, '0%')
         note = ('Applied: withdrawn rows stay visible but add nothing (D21).' if ph.startswith('Withdrawn') else
+                'Applied where the app match is High or Medium confidence.' if app_mode() else
                 'Not applied (D27). Shown beside each application as a hint for Planning\'s estimate.')
         X.body(ws.cell(r, 4, note), wrap=True)
     R.ph = f'$A$11:$A${10 + len(PHASE_SHARE)}'
@@ -88,7 +107,8 @@ def sheet_assumptions(ws, labels):
     # C. build-out speed limit
     r0 = 12 + len(PHASE_SHARE)
     X.header(ws, r0, ['C. Build-out speed limit', 'Value', '', 'Note'])
-    items = [('Apply the limit? (Yes / No)', LIMIT_ON, None, 'Off (D27). Planning may switch it on.'),
+    items = [('Apply the limit? (Yes / No)', 'Yes' if app_mode() else LIMIT_ON, None,
+              'On for the app estimate.' if app_mode() else 'Off (D27). Planning may switch it on.'),
              ('Units per year, per development', LIMIT_RATE, '#,##0', 'Used only if the limit is on.'),
              ('Building from (end of year)', LIMIT_FROM, '0', 'Today is late 2026.'),
              ('Building to (end of year)', LIMIT_TO, '0', 'Scenario 1 horizon.')]
@@ -110,12 +130,14 @@ def sheet_assumptions(ws, labels):
 
     # D. area default share
     r1 = r + 3
-    X.header(ws, r1, ["D. Planning's estimate: share of each area's population built by 2031", 'Share', '', 'Note'])
+    X.header(ws, r1, ['D. Rows the app cannot confirm: share built by 2031' if app_mode() else
+                      "D. Planning's estimate: share of each area's population built by 2031", 'Share', '', 'Note'])
     for i, lab in enumerate(sorted(labels, key=lambda x: x['map_order'])):
         rr = r1 + 1 + i
         X.body(ws.cell(rr, 1, lab['area_name']), X.BOLD)
         yellow(ws.cell(rr, 2, AREA_DEFAULT), '0%')
-        X.body(ws.cell(rr, 4, "100% = today's assumption (all application populations are 2031). Replace with Planning's estimate."))
+        X.body(ws.cell(rr, 4, "100% = today's figure: the app has no evidence to change it." if app_mode() else
+                   "100% = today's assumption (all application populations are 2031). Replace with Planning's estimate."))
     R.area = f'$A${r1 + 1}:$A${r1 + len(labels)}'
     R.area_share = f'$B${r1 + 1}:$B${r1 + len(labels)}'
     ws.freeze_panes = 'A4'
@@ -145,7 +167,8 @@ COLS = [  # key, header, width, format
 
 def sheet_applications(ws, apps, match, info, stated, R):
     ws.title = 'Applications'
-    X.header(ws, 1, [c[1] for c in COLS], [c[2] for c in COLS])
+    app_heads = {'ph_share': 'Share from app stage', 'ar_share': 'Share where the app has no evidence'}
+    X.header(ws, 1, [app_heads.get(c[0], c[1]) if app_mode() else c[1] for c in COLS], [c[2] for c in COLS])
     L = {k: get_column_letter(i) for i, (k, _, _, _) in enumerate(COLS, 1)}
     A = "Assumptions!"
     for n, a in enumerate(apps, 2):
@@ -176,12 +199,18 @@ def sheet_applications(ws, apps, match, info, stated, R):
             'ph_share': f'=IF({c["phase"]}="","",INDEX({A}{R.ph_share},MATCH({c["phase"]},{A}{R.ph},0)))',
             'ar_share': f'=INDEX({A}{R.area_share},MATCH({c["area"]},{A}{R.area},0))',
             'override': None,
-            'src': f'=IF({c["override"]}<>"","Planning override",IF({c["phase"]}="{WITHDRAWN}","Withdrawn (D21)","Area estimate"))',
-            'share': f'=IF({c["override"]}<>"",{c["override"]},IF({c["phase"]}="{WITHDRAWN}",0,{c["ar_share"]}))',
+            'src': (f'=IF({c["override"]}<>"","Planning override",IF({c["phase"]}="{WITHDRAWN}","Withdrawn (D21)",'
+                    f'IF({c["ph_share"]}<>"","App stage","No app evidence")))' if app_mode() else
+                    f'=IF({c["override"]}<>"","Planning override",IF({c["phase"]}="{WITHDRAWN}","Withdrawn (D21)","Area estimate"))'),
+            'share': (f'=IF({c["override"]}<>"",{c["override"]},IF({c["ph_share"]}<>"",{c["ph_share"]},{c["ar_share"]}))'
+                      if app_mode() else
+                      f'=IF({c["override"]}<>"",{c["override"]},IF({c["phase"]}="{WITHDRAWN}",0,{c["ar_share"]}))'),
             'dev': dev_id(a, m, trusted),
             'u_pre': f'=IF(AND({c["inc"]}="Yes",{c["units"]}<>""),{c["units"]}*{c["share"]},0)',
             'dev_pre': f'=SUMIFS(${L["u_pre"]}$2:${L["u_pre"]}${len(apps) + 1},${L["dev"]}$2:${L["dev"]}${len(apps) + 1},{c["dev"]})',
-            'limited': f'=IF(AND({A}{R.lim_on}="Yes",{c["dev_pre"]}>{A}{R.lim_units}),"Yes","No")',
+            'limited': (f'=IF(AND({A}{R.lim_on}="Yes",{c["src"]}="App stage",{c["dev_pre"]}>{A}{R.lim_units}),"Yes","No")'
+                        if app_mode() else   # the app estimate limits only what the app evidences
+                        f'=IF(AND({A}{R.lim_on}="Yes",{c["dev_pre"]}>{A}{R.lim_units}),"Yes","No")'),
             'final': f'=IF({c["limited"]}="Yes",{c["share"]}*{A}{R.lim_units}/{c["dev_pre"]},{c["share"]})',
             'u2031': f'=IF({c["units"]}="","",{c["units"]}*{c["final"]})',
             'p2031': f'=IF({c["inc"]}="Yes",{c["pop"]}*{c["final"]},0)',
@@ -224,7 +253,8 @@ def sheet_summary(ws, labels, L, n_apps):
     ws['A2'] = 'All formulas on the Applications sheet; rows in the 2031 total only. Change the yellow cells on Assumptions.'
     ws['A2'].font = X.SUB
     cols = ['Priority area', 'Rows', 'Full population', 'Units (full)', 'Share built by 2031', '2031 population',
-            'Units by 2031', '2031 pop. from the area estimate', '2031 pop. from row overrides',
+            'Units by 2031', '2031 pop. from the app stage' if app_mode() else '2031 pop. from the area estimate',
+            '2031 pop. with no app evidence' if app_mode() else '2031 pop. from row overrides',
             'Full pop. withdrawn (D21)', 'Rows held by the speed limit', 'Share of 2031 total']
     X.header(ws, 4, cols, [22, 7, 13, 11, 11, 13, 11, 13, 13, 13, 11, 10])
     rng = lambda k: f'Applications!${L[k]}$2:${L[k]}${n_apps + 1}'   # noqa: E731
@@ -243,7 +273,8 @@ def sheet_summary(ws, labels, L, n_apps):
         X.body(ws.cell(r, 5, f'=IF(C{r}>0,F{r}/C{r},"")'), fmt='0%')
         X.body(ws.cell(r, 6, f'=SUMIFS({rng("p2031")},{ar},{inc})'), X.BOLD, '#,##0')
         X.body(ws.cell(r, 7, f'=SUMIFS({rng("u2031")},{ar},{inc})'), fmt='#,##0')
-        for col, src in ((8, 'Area estimate'), (9, 'Planning override')):
+        for col, src in (((8, 'App stage'), (9, 'No app evidence')) if app_mode() else
+                         ((8, 'Area estimate'), (9, 'Planning override'))):
             X.body(ws.cell(r, col, f'=SUMIFS({rng("p2031")},{ar},{inc},{rng("src")},"{src}")'), fmt='#,##0;-#,##0;-')
         X.body(ws.cell(r, 10, f'=SUMIFS({rng("pop")},{ar},{inc},{rng("src")},"Withdrawn (D21)")'), fmt='#,##0;-#,##0;-')
         X.body(ws.cell(r, 11, f'=COUNTIFS({ar},{inc},{rng("limited")},"Yes")'), fmt='0;-0;-')  # rows
