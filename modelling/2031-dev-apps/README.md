@@ -25,6 +25,7 @@ private/
   Bucket1_Inventory.xlsx                    built by build_inventory.py
   map_boxes.json                            built by extract_map_boxes.py
   Bucket2_Areas.xlsx, Bucket2_check_map.png built by build_areas.py
+  Bucket3_App_Check.xlsx                    built by build_app_check.py (runs app_match.js)
 ```
 
 ## Buckets
@@ -33,8 +34,8 @@ private/
 |---|--------|--------|--------|
 | 0 | Map areas workbook | `build_map_areas.py` | reviewed |
 | 1 | Inventory and reconciliation | `build_inventory.py` | reviewed |
-| 2 | Area assignment (by location) | `extract_map_boxes.py`, `build_areas.py` | built, in review |
-| 3 | Cross-validation against the app | | not started |
+| 2 | Area assignment (by location) | `extract_map_boxes.py`, `build_areas.py` | reviewed |
+| 3 | Cross-validation against the app | `app_match.js`, `build_app_check.py` | built, in review |
 | 4 | Assumptions (units, density, share built by 2031) | | not started |
 | 5 | Planning review workbook | | not started |
 | 6 | Modelling handoff | | not started |
@@ -49,6 +50,7 @@ python3 build_map_areas.py
 python3 build_inventory.py
 python3 extract_map_boxes.py
 python3 build_areas.py
+python3 build_app_check.py      # needs Node 18+; reads the app's data/ read-only
 ```
 
 **How the area assignment works.** The map PDF is vector: each priority area is a dark-red
@@ -60,3 +62,11 @@ up to, and checks the population against the label. Municipality comes from the 
 `data/munis.json` where the file has none.
 
 Formulas are written uncalculated; Excel calculates them on open.
+
+**How the app check works.** `app_match.js` builds the app's developments exactly as the app does
+(`scripts/app-devs.js`) and matches each application: by file number translated to the
+municipality's numbering (and within 1 km), else by the application site outline the point falls in
+(current developments before legacy-only ones), else the nearest development within 150 m. It only
+reads the app's data. `build_app_check.py` grades each match, raises flags (withdrawn, non-residential,
+built by 2021, people per unit), weighs the open duplicate pairs and summarises population by app
+phase. Flags that could take people out of 2031 growth are raised only on High / Medium matches.

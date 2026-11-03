@@ -477,24 +477,41 @@ def sheet_duplicates(ws, cands):
     ws.freeze_panes = 'C5'
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--shp', default=os.path.join(HERE, 'private', 'input', 'Dev_Apps_V7'))
-    ap.add_argument('--labels', default=os.path.join(HERE, 'private', 'map_labels.csv'))
-    ap.add_argument('--boxes', default=os.path.join(HERE, 'private', 'map_boxes.json'))
-    ap.add_argument('--decisions', default=os.path.join(HERE, 'private', 'decisions.csv'))
-    ap.add_argument('--munis', default=os.path.join(HERE, '..', '..', 'data', 'munis.json'))
-    ap.add_argument('--out', default=os.path.join(HERE, 'private', 'Bucket2_Areas.xlsx'))
-    a = ap.parse_args()
-    _, apps, meta = load(a.shp)
-    labels = load_labels(a.labels)
-    boxes = json.load(open(a.boxes))
-    decisions = list(csv.DictReader(open(a.decisions, newline='', encoding='utf-8')))
+PRIVATE = os.path.join(HERE, 'private')
+DEFAULTS = {
+    'shp': os.path.join(PRIVATE, 'input', 'Dev_Apps_V7'),
+    'labels': os.path.join(PRIVATE, 'map_labels.csv'),
+    'boxes': os.path.join(PRIVATE, 'map_boxes.json'),
+    'decisions': os.path.join(PRIVATE, 'decisions.csv'),
+    'munis': os.path.join(HERE, '..', '..', 'data', 'munis.json'),
+}
+
+
+def prepare(paths=None):
+    """Buckets 1-2 in memory: the applications with area, municipality and D11 applied.
+    Shared by later buckets so every workbook starts from the same rows."""
+    p = {**DEFAULTS, **(paths or {})}
+    _, apps, meta = load(p['shp'])
+    labels = load_labels(p['labels'])
+    boxes = json.load(open(p['boxes']))
+    decisions = list(csv.DictReader(open(p['decisions'], newline='', encoding='utf-8')))
     names = assign(apps, boxes, labels)
-    municipalities(apps, json.load(open(a.munis)))
+    municipalities(apps, json.load(open(p['munis'])))
     _, pairs = find_issues(apps, meta)
     cands = duplicate_candidates(apps, pairs)
     resolve_d11(cands, apps)
+    return {'apps': apps, 'labels': labels, 'boxes': boxes, 'decisions': decisions, 'names': names,
+            'cands': cands}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    for k, v in DEFAULTS.items():
+        ap.add_argument(f'--{k}', default=v)
+    ap.add_argument('--out', default=os.path.join(PRIVATE, 'Bucket2_Areas.xlsx'))
+    a = ap.parse_args()
+    st = prepare({k: getattr(a, k) for k in DEFAULTS})
+    apps, labels, boxes, decisions, names, cands = (st[k] for k in ('apps', 'labels', 'boxes', 'decisions', 'names', 'cands'))
 
     colour = {lab['area_name']: PALETTE[i % len(PALETTE)]
               for i, lab in enumerate(sorted(labels, key=lambda r: r['map_order']))}
