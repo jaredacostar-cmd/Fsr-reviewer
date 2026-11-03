@@ -30,6 +30,8 @@ from build_assumptions import (load_stated, sheet_applications, sheet_assumption
 from build_map_areas import write_points_by_area  # noqa: E402
 
 SKIP_CHECKS = {'Employment equivalent (D15)'}     # decided at checkpoint 3: information only
+PPU_EXTREME = (1.0, 6.0)                          # D25: only these people-per-unit flags reach Planning
+PPU_CHECK = 'People per unit outside the usual range'
 
 
 def label_uses_population(st, a):
@@ -48,7 +50,10 @@ def open_flags(st, match, info):
         out.append({'src': src, 'sev': sev, 'rows': rows, 'check': check, 'detail': detail})
     # Bucket 3: per row
     for a in inc:
+        ppu = info[a['id']]['ppu']
         for f in info[a['id']]['flags']:
+            if f['check'] == PPU_CHECK and ppu and PPU_EXTREME[0] <= ppu <= PPU_EXTREME[1]:
+                continue
             if f['check'] not in SKIP_CHECKS:
                 add('3 App check', f['sev'], [a], f['check'], f['detail'])
     # Bucket 3: open pairs (D17)
