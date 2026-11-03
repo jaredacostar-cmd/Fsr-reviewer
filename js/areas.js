@@ -107,7 +107,10 @@
     if (done.length) return { date: Math.max(...done), estimated: !!r.completedEstimated };
     const issued = r.events.filter(e => e.phase === 'permit').map(e => +e.date);
     if (!issued.length) return null;
-    return { date: Math.min(...issued) + ((r.units || 0) >= 20 ? 30 : 12) * MONTH, estimated: true };
+    // An apartment permit that states no units (Brampton publishes them all blank) is a building of
+    // 20+ homes, not a house (decided 2026-11-03).
+    const big = (r.units || 0) >= 20 || (!(r.units > 0) && /apartment/i.test(r.type || ''));
+    return { date: Math.min(...issued) + (big ? 30 : 12) * MONTH, estimated: true };
   }
 
   // A development's homes and suites completed since census day, with how many of the dates counted are

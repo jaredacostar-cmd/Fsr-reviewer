@@ -872,7 +872,7 @@
       if (!issued.length) continue;
       const first = Math.min(...issued);
       if (first > asOf - STALE_OPEN_YEARS * 365.25 * 864e5) continue;
-      const at = first + ((r.units || 0) >= 20 ? 30 : 12) * MONTH_MS;
+      const at = first + ((r.units || 0) >= 20 || (!(r.units > 0) && /apartment/i.test(r.type || '')) ? 30 : 12) * MONTH_MS;
       r.events = [...r.events, { date: new Date(at), phase: 'completed', label: 'Completed (estimated: no status for five years or more)' }];
       r.phase = 'completed'; r.completedEstimated = true; n++;
     }
