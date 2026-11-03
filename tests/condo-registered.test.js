@@ -2,6 +2,7 @@
 // A registered condominium is a finished building; a condominium conversion adds no homes
 // (js/phases.js isRegisteredCondo, isCondoConversion; decided 2026-10-20).
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const P = require('../js/phases.js');
 const H = require('./helpers/real-devs.js');
@@ -46,7 +47,7 @@ test('a condominium conversion and the site plan filed for it add no homes; an o
   assert.ok(!P.isCondoConversion(app('C03W05.022', 'condo', { description: 'To convert the proposed townhouse development to common-element condominium tenure.' })), 'a proposed development is a new build');
 });
 
-test('the real sites: 151 City Centre built, 123 Railroad St counts no new homes', { skip: !H.available() }, () => {
+siteTest('the real sites: 151 City Centre built, 123 Railroad St counts no new homes', { skip: !H.available() }, () => {
   const { projects } = H.realDevs();
   const of = ref => projects.find(p => p.records.some(r => r.ref === ref));
   const cc = of('SP 19/056');

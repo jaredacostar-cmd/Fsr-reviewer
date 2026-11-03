@@ -6,8 +6,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const P = require('../js/phases.js');
 const H = require('./helpers/real-devs.js');
+const { siteTest } = require('./helpers/site-check.js');
 
-test('10194 Heart Lake Rd: the full site plan is the main file, the limited one sits under it, the earlier application is history, 200 homes once', { skip: !H.available() }, () => {
+siteTest('10194 Heart Lake Rd: the full site plan is the main file, the limited one sits under it, the earlier application is history, 200 homes once', { skip: !H.available() }, () => {
   const { projects, tree } = H.realDevs();
   const p = projects.find(x => x.records.some(r => r.ref === 'SPA-2024-0144'));
   assert.ok(p.records.some(r => r.ref === 'SPA-2022-0101'), 'the application it replaces is in the same development');
@@ -20,7 +21,7 @@ test('10194 Heart Lake Rd: the full site plan is the main file, the limited one 
   assert.equal(projects.filter(x => x.records.some(r => r.ref === 'SPA-2022-0101' || r.ref === 'SPA-2024-0144')).length, 1, 'counted in one development, not two');
 });
 
-test('two towers of one application: 225 Malta Ave (290) and 209 Steeles Ave W (466) are both counted, in one development', { skip: !H.available() }, () => {
+siteTest('two towers of one application: 225 Malta Ave (290) and 209 Steeles Ave W (466) are both counted, in one development', { skip: !H.available() }, () => {
   // A reference never joins them as one proposal (the larger would stand alone); the 2016 site plan
   // SP16-091.000 they were split from makes them one development (scripts/build-tree-counts.js 3·),
   // each building counted: 109 townhouses + 290 + 466.
@@ -33,13 +34,13 @@ test('two towers of one application: 225 Malta Ave (290) and 209 Steeles Ave W (
   assert.equal(p.units, 109 + 290 + 466, 'both towers counted, not the larger one');
 });
 
-test('a reference to a file far away is ignored (SP18-041.000 "converted from PRE18.024" for its fee)', { skip: !H.available() }, () => {
+siteTest('a reference to a file far away is ignored (SP18-041.000 "converted from PRE18.024" for its fee)', { skip: !H.available() }, () => {
   const { projects } = H.realDevs();
   const of = ref => projects.find(x => x.records.some(r => r.ref === ref));
   assert.notEqual(of('SP18-041.000'), of('PRE18.024'));
 });
 
-test('1-30 Gillingham Dr: a limited site plan for a patio is not the formal file of the 1,753-home pre-consultation', { skip: !H.available() }, () => {
+siteTest('1-30 Gillingham Dr: a limited site plan for a patio is not the formal file of the 1,753-home pre-consultation', { skip: !H.available() }, () => {
   const { projects } = H.realDevs();
   const of = ref => projects.find(x => x.records.some(r => r.ref === ref));
   const pre = of('PRE-2019-0043'), patio = of('SPA-2022-0214');

@@ -12,7 +12,10 @@ function siteTest(name, opts, fn) {
   if (process.env.SITE_CHECKS !== 'warn') return test(name, opts, fn);
   return test(name, opts, async t => {
     try { await fn(t); } catch (e) {
-      const message = String((e && e.message) || e).split('\n').filter(Boolean).slice(0, 3).join(' ').slice(0, 300);
+      // (the assertion's first line, then its diff lines: what changed, e.g. "+ 8, - 7," for 8 files where 7
+      // were expected; the first three lines alone stopped at "+ actual - expected [")
+      const lines = String((e && e.message) || e).split('\n').map(l => l.trim().replace(/\s+/g, ' ')).filter(Boolean);
+      const message = [lines[0], ...lines.slice(1).filter(l => /^[+-] /.test(l) && !/^\+ actual - expected$/.test(l)).slice(0, 8)].join(' ').slice(0, 500);
       t.diagnostic(`site check changed: ${message}`);
       if (process.env.SITE_CHECKS_REPORT) fs.appendFileSync(process.env.SITE_CHECKS_REPORT, `${JSON.stringify({ test: name, message })}\n`);
     }

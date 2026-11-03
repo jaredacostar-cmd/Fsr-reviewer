@@ -2,6 +2,7 @@
 // Site → proposal → file, step 1 (js/sites.js, report only): a file's scope, and a tree split into
 // its proposals and its site activity.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const S = require('../js/sites.js');
 const H = require('./helpers/real-devs.js');
@@ -64,15 +65,24 @@ test('proposalsOf: a superseded file ties the files filed before and after it, a
   assert.equal(lone.proposals.length, 0, 'history tied to no proposal is the site\'s');
 });
 
-test('the step 1 report on the real data: homes agree, site activity no longer sets a stage', { skip: !H.available() }, () => {
+test('the step 1 report on the real data: homes agree', { skip: !H.available() }, () => {
   const a = require('../data/site-audit.json');
   assert.ok(Math.abs(a.homes.change) < 50, `homes before and after agree (${a.homes.change})`);
+});
+
+siteTest('the step 1 report on the real data: site activity no longer sets a stage (site check: Brampton|263 QUEEN ST E)', { skip: !H.available() }, () => {
+  const a = require('../data/site-audit.json');
   const q = a.stageChanges.list.find(r => r.k === 'Brampton|263 QUEEN ST E');
   assert.ok(q && q.today === 'review' && q.proposal === 'inception', 'a day care fit-out no longer puts the 2,810-home pre-consultation in review');
   assert.ok(q.site.includes('SPA-2026-0058'));
 });
 
-test('step 2: the trees as written: each proposal a development, the site activity one more, the parts of a site linked', { skip: !H.available() }, () => {
+test('step 2: the trees as written: site activity carries no proposal\'s homes', { skip: !H.available() }, () => {
+  const TREE = require('../data/tree-counts.json');
+  assert.ok(!TREE.devs.some(d => d.sa && d.u > 10), 'site activity carries no proposal\'s homes');
+});
+
+siteTest('step 2: the trees as written: each proposal a development, the site activity one more, the parts of a site linked (site check: Brampton|47 BOVAIRD DR W, Brampton|10194 HEART LAKE RD)', { skip: !H.available() }, () => {
   const TREE = require('../data/tree-counts.json'), dev = k => TREE.devs.find(d => d.k === k);
   const main = dev('Brampton|47 BOVAIRD DR W');
   assert.deepEqual(main.n.map(n => n[0]).sort(), ['PRE-2019-0043', 'PRE-2021-0038']);
@@ -80,20 +90,11 @@ test('step 2: the trees as written: each proposal a development, the site activi
   const patio = TREE.devs.find(d => d.n.some(n => n[0] === 'SPA-2022-0214'));
   assert.equal(patio.sa, 1, 'the patio is site activity');
   assert.equal(patio.st, 'Brampton|47 BOVAIRD DR W', 'on the site of the 1,753-home proposal');
-  assert.ok(!TREE.devs.some(d => d.sa && d.u > 10), 'site activity carries no proposal\'s homes');
   assert.equal(dev('Brampton|10194 HEART LAKE RD').n.some(n => n[0] === 'SPA-2022-0101'), true, 'history stays with the proposal that replaces it');
 });
 
 test('step 2: the app holds site activity aside, and a development page lists the other parts of its site', { skip: !H.available() }, () => {
-  const { projects, byKey } = H.realDevs();
-  const TG = require('../js/tree-groups.js');
-  const p = byKey.get('Brampton|47 BOVAIRD DR W');
-  assert.equal(p.phase, 'inception'); assert.equal(p.units, 1753); assert.ok(!p.siteActivity);
-  const parts = TG.siteParts(p, projects);
-  assert.ok(parts.length && parts.every(q => q.siteActivity), 'its other activity');
-  assert.ok(parts.some(q => q.records.some(r => r.ref === 'SPA-2022-0214')));
-  const patio = parts.find(q => q.records.some(r => r.ref === 'SPA-2022-0214'));
-  assert.ok(TG.siteParts(patio, projects).includes(p), 'and the patio\'s page lists the proposal');
+  const { projects } = H.realDevs();
   const held = projects.filter(q => q.siteActivity);
   assert.ok(held.reduce((t, q) => t + (q.units || 0), 0) < 20, 'holding it aside moves almost no homes');
   const fs = require('fs'), src = f => fs.readFileSync(require('path').join(__dirname, '..', f), 'utf8');
@@ -104,6 +105,18 @@ test('step 2: the app holds site activity aside, and a development page lists th
   // navigation phase 5's review, with its data-relq and data-proj-back handlers)
   assert.match(src('js/devtab.js'), /<h2 class="section-title" data-info="dev-site">On this site<\/h2>/);
   assert.doesNotMatch(src('js/dev-nav.js'), /function filesHTML|data-relq|data-proj-back/);
+});
+
+siteTest('step 2: a development page lists the other parts of its site (site check: Brampton|47 BOVAIRD DR W and its patio SPA-2022-0214)', { skip: !H.available() }, () => {
+  const { projects, byKey } = H.realDevs();
+  const TG = require('../js/tree-groups.js');
+  const p = byKey.get('Brampton|47 BOVAIRD DR W');
+  assert.equal(p.phase, 'inception'); assert.equal(p.units, 1753); assert.ok(!p.siteActivity);
+  const parts = TG.siteParts(p, projects);
+  assert.ok(parts.length && parts.every(q => q.siteActivity), 'its other activity');
+  assert.ok(parts.some(q => q.records.some(r => r.ref === 'SPA-2022-0214')));
+  const patio = parts.find(q => q.records.some(r => r.ref === 'SPA-2022-0214'));
+  assert.ok(TG.siteParts(patio, projects).includes(p), 'and the patio\'s page lists the proposal');
 });
 
 test('step 2: Records › Files, the panel a development opens to, lists On this site', () => {

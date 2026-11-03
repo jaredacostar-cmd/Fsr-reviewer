@@ -7,6 +7,7 @@ const assert = require('node:assert/strict');
 const T = require('../js/timing.js');
 const L = require('../js/ledger.js');
 const { realDevs, available } = require('./helpers/real-devs.js');
+const { siteTest } = require('./helpers/site-check.js');
 
 const ms = (y, m = 0) => Date.UTC(y, m, 1);
 const site = (key, muni, phase, units, milestones) => ({ key, municipality: muni, phase, units, milestones, records: [], types: [], description: '' });
@@ -54,12 +55,17 @@ test('backtest: a site finishing inside its range is a hit; one past its likely 
   assert.equal(r.within1, 1);
 });
 
+// Which municipalities' feeds date their completions is a fact of this week's data (one Brampton or Caledon
+// completion with a date would change it): reported in the weekly refresh, not a stop.
+siteTest('real data: only Mississauga dates its completions (site check: the municipal feeds)', { skip: !available() }, () => {
+  assert.deepEqual([...T.datedMunis(realDevs().projects)], ['Mississauga']);
+});
+
 // The real snapshot: every development's schedule adds up to the Forecast view's yearly totals, and the
 // ledger's buckets to its 2031, 2041 and 2051 sums.
 test('real data: rows add up to the forecast; expected years are within its span', { skip: !available() }, () => {
   const { projects } = realDevs();
   const now = Date.parse('2026-10-19T00:00:00Z'), munis = T.datedMunis(projects);
-  assert.deepEqual([...munis], ['Mississauga']);
   const H = require('../data/housing.json'), R = require('../data/peel-reports.json');
   const homes = T.homesNeeded(H.mof && H.mof.peel, R.forecast2051 && R.forecast2051.municipalities);
   const cal = T.calibrate(T.observationsFromProjects(projects)), curves = T.stageCurves(T.curveObservations(projects, now, { munis }));
