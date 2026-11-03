@@ -903,6 +903,47 @@
     suSites.set(r, s);
     return s;
   }
+  // A closed building permit that can't be the finished building (decided 2026-11-03). Mississauga
+  // issues large buildings in stages, each permit carrying the building's full unit count, and closes a
+  // stage's permit when its inspections are signed off, so the closure was read as the building done:
+  //  - stage: a partial permit, or a conditional permit for only the foundation, below-grade or
+  //    parking structure, shoring or excavation. A superstructure stage or a full conditional permit
+  //    is the building, and its closure stands;
+  //  - fast: 100+ homes closed less than 18 months after the permit was first issued (M5 at 3880
+  //    Fitzroy St: 430 homes issued April 2024, closed January 2025, still under construction).
+  // A stage permit is held at construction: its homes are permitted, not completed. A fast one is
+  // re-dated as a 20+ unit building's estimate (first issue + 30 months), marked estimated: the
+  // building does go up (360 City Centre Dr's conditional permit closed after 8 months; the 2024
+  // aerial shows the tower). A registered condominium still makes the homes built (condoBuilt).
+  const STAGE_PERMIT = /\bpartial permit\b|\bconditional\b[^.]*?\b(foundation|footings?|below[- ]grade|u\/g parking|underground parking|parking (structure|garage) only|shoring|excavation)\b/i;
+  const STAGE_LAST = /superstructure|full conditional/i;
+  const FAST_UNITS = 100, FAST_MONTHS = 18;
+  function earlyCompletion(r) {
+    if (r.kind !== 'permit' || r.phase !== 'completed' || !(r.units > 0) || r.completedEstimated) return null;
+    const d = String(r.description || '');
+    if (STAGE_PERMIT.test(d) && !STAGE_LAST.test(d)) return 'stage';
+    if (r.units >= FAST_UNITS) {
+      const done = (r.events || []).filter(e => e.phase === 'completed').map(e => +e.date);
+      const issued = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date);
+      if (done.length && issued.length && Math.max(...done) - Math.min(...issued) < FAST_MONTHS * MONTH_MS) return 'fast';
+    }
+    return null;
+  }
+  function holdEarlyCompletions(records) {
+    let n = 0;
+    for (const r of records) {
+      const why = earlyCompletion(r);
+      if (!why) continue;
+      r.completionHeld = why; n++;
+      if (why === 'stage') { r.phase = 'construction'; continue; }
+      const issued = Math.min(...r.events.filter(e => e.phase === 'permit').map(e => +e.date));
+      const closed = Math.max(...r.events.filter(e => e.phase === 'completed').map(e => +e.date));
+      const at = Math.max(closed, issued + 30 * MONTH_MS);
+      r.events = [...r.events.filter(e => e.phase !== 'completed'), { date: new Date(at), phase: 'completed', label: 'Completed (estimated: the permit closed too soon after issue to be the finished building)' }];
+      r.closedAt = closed; r.completedEstimated = true;
+    }
+    return n;
+  }
   function holdSecondUnits(records) {
     const held = [], rest = [];
     for (const r of records) (isSecondUnitConversion(r) ? held : rest).push(r);
@@ -914,6 +955,7 @@
     records = rest;
     let groups = new Map();
     closeStalePermits(records, opts.asOf);
+    holdEarlyCompletions(records);
     for (const r of records) readTextUnits(r);
     for (const r of records) {
       const k = projectKey(r);
@@ -1854,7 +1896,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, displayAddress, normalizeRecord,
-    representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
+    representativePoint, buildProjects, closeStalePermits, earlyCompletion, holdEarlyCompletions, STAGE_PERMIT, FAST_UNITS, FAST_MONTHS, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, submittedAt, newestFirst, proposedStateOf, dormantOf, DORMANT_YEARS,
     // The joining and stage rules' numbers, for Reference › How the app decides (js/logic.js).

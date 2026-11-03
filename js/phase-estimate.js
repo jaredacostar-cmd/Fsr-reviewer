@@ -92,7 +92,7 @@
     const fdn = permits.filter(r => isPartial(r) && r.phase === 'completed');
     if (physical && fdn.length) {
       floor = Math.max(floor, 1);
-      const r = fdn[0], at = dateOf(r, 'completed');
+      const r = fdn[0], at = r.closedAt != null ? r.closedAt : dateOf(r, 'completed');   // (the source's own sign-off, before js/phases.js re-dated it)
       add('History', `${r.ref || 'A foundation permit'} is a conditional / foundation permit${at ? `, signed off ${day(at)}` : ' signed off'}: it covers the work up to grade, not the finished building`, 1);
     }
     // Inspections on a permit: work under way.
