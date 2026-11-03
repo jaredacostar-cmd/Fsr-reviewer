@@ -21,16 +21,19 @@ private/
   input/4507-WW-...Modelling_Update.pdf     the map
   map_labels.csv                            the 19 area labels, copied by hand from the map
   Map_Areas_2031.xlsx                       built by build_map_areas.py
+  decisions.csv                             decisions locked at each checkpoint (shown in the workbooks)
   Bucket1_Inventory.xlsx                    built by build_inventory.py
+  map_boxes.json                            built by extract_map_boxes.py
+  Bucket2_Areas.xlsx, Bucket2_check_map.png built by build_areas.py
 ```
 
 ## Buckets
 
 | # | Bucket | Script | Status |
 |---|--------|--------|--------|
-| 0 | Map areas workbook | `build_map_areas.py` | built, in review |
-| 1 | Inventory and reconciliation | `build_inventory.py` | built, in review |
-| 2 | Area assignment (by location) | | not started |
+| 0 | Map areas workbook | `build_map_areas.py` | reviewed |
+| 1 | Inventory and reconciliation | `build_inventory.py` | reviewed |
+| 2 | Area assignment (by location) | `extract_map_boxes.py`, `build_areas.py` | built, in review |
 | 3 | Cross-validation against the app | | not started |
 | 4 | Assumptions (units, density, share built by 2031) | | not started |
 | 5 | Planning review workbook | | not started |
@@ -38,11 +41,22 @@ private/
 
 ## Running
 
-Python 3 with `openpyxl`; no GIS libraries needed (`shapefile_lite.py` reads point shapefiles).
+Python 3 with `openpyxl` and Pillow, plus poppler (`pdftocairo`, `pdftoppm`) to read the map PDF.
+No GIS libraries needed: `shapefile_lite.py` reads point shapefiles and `geo.py` converts to UTM.
 
 ```bash
 python3 build_map_areas.py
 python3 build_inventory.py
+python3 extract_map_boxes.py
+python3 build_areas.py
 ```
+
+**How the area assignment works.** The map PDF is vector: each priority area is a dark-red
+rectangle and each application a point symbol. `extract_map_boxes.py` matches the symbols to the
+shapefile points (rotation search at the map's printed scale, then an iterated affine fit) to
+georeference the page, so the rectangles are known on the ground. `build_areas.py` places each
+application in its rectangle, names each rectangle after the label whose area its applications add
+up to, and checks the population against the label. Municipality comes from the app's
+`data/munis.json` where the file has none.
 
 Formulas are written uncalculated; Excel calculates them on open.
