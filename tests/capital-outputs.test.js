@@ -2,6 +2,7 @@
 // Capital and EA outputs for the people who use them: the reviewer's site brief, the planner's
 // watch list (Capital › Construction › To check) and the CSV with one row per contract.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
@@ -133,7 +134,7 @@ test('wiring: Construction › To check and its CSVs, the site panel and its cop
   assert.match(html, /data-sec="watch"[\s\S]*Nothing to check[\s\S]*data-ce-cap-csv/);
 });
 
-test('real data: the brief, the list and the CSV build from the committed files', () => {
+test('real data: the list and the CSV build from the committed files', () => {
   const capital = JSON.parse(src('data/capital.json')), easData = JSON.parse(src('data/eas.json'));
   const cs = M.contracts(capital.records);
   const w = M.watchList({ capital, eas: easData.eas, contracts: cs, today: TODAY });
@@ -143,6 +144,11 @@ test('real data: the brief, the list and the CSV build from the committed files'
   assert.ok(sh.rows.every(r => r.length === sh.cols.length));
   const people = /ProjectManager|Inspector|Contractor|ContractAdmin|Consultant|AssignmentID/i;
   assert.doesNotMatch(JSON.stringify(sh) + JSON.stringify(w), people);
+});
+
+siteTest('real data: the brief builds from the committed files (site check: downtown Brampton, 43.6857, -79.7599)', () => {
+  const capital = JSON.parse(src('data/capital.json')), easData = JSON.parse(src('data/eas.json'));
+  const cs = M.contracts(capital.records);
   const b = M.siteBrief({ eas: easData.eas, contracts: cs, lat: 43.6857, lng: -79.7599, pts: [], muni: 'Brampton', today: TODAY, asOf: capital.source.latestLastUpdate });
   assert.ok(b.eas.length > 0 && b.works.length > 0, 'downtown Brampton has EAs and works nearby');
 });

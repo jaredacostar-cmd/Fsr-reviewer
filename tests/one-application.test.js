@@ -2,6 +2,7 @@
 // One application, one development (scripts/build-tree-counts.js 3·): the pieces an application was
 // split into become one development, each building counted once; the old keys resolve to it.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 globalThis.PeelPhases = require('../js/phases.js');
 const TG = require('../js/tree-groups.js');
@@ -57,8 +58,10 @@ test('frameOf: a city-initiated policy file is not an application', () => {
   assert.equal(EF.frameOf(p, [p, q]), site);
 });
 
-test('real data: the split applications are one development each, each building counted once', { skip: !H.available() }, () => {
-  const { projects, tree } = H.realDevs();
+// (site check: three real developments in this week's data, data/snapshot.json and data/tree-counts.json; the
+// merged keys and parts below hold for any data, strict.)
+siteTest('real data: the split applications are one development each, each building counted once (site check: 137 Steeles Ave W, 260 / 270 Malta Ave, 58 / 62 Sky Harbour Dr)', { skip: !H.available() }, () => {
+  const { projects } = H.realDevs();
   const of = ref => projects.find(x => x.records.some(r => r.ref === ref));
   // 137 Steeles Ave W: the 2023 rezoning (1,147) and the 2025 site plan (991) are the same two towers.
   assert.equal(of('OZS-2023-0018'), of('SPA-2025-0193'));
@@ -68,6 +71,10 @@ test('real data: the split applications are one development each, each building 
   assert.equal(of('SPA-2021-0143').units, 349 + 618);
   // 58 / 62 Sky Harbour Dr: the registered condominium (134) and another phase (229).
   assert.equal(of('DPC-2022-0007').units, 134 + 229);
+});
+
+test('real data: every merged key resolves to a development that exists; the count parts add up to each merged development\'s count', { skip: !H.available() }, () => {
+  const { projects, tree } = H.realDevs();
   // Every merged key resolves to a development that exists.
   const keys = new Set(projects.map(p => p.key));
   TG.setData(tree);

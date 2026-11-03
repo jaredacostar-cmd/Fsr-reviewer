@@ -2,6 +2,7 @@
 // Design bundle 6 — organization: a development's files as a tree (Records › Files, the rows of
 // Growth in an area, the estimate rows), one stage on each row, and the rest of the reorganization.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -12,7 +13,9 @@ const T = require('../js/file-tree.js');
 const TREE = require('../data/tree-counts.json');
 const dev = k => TREE.devs.find(d => d.k === k);
 
-test('file tree: one root, the files on its land under it, earlier files on the same land folded, links to check', () => {
+// (site checks: these two read one real development's tree in data/tree-counts.json, which the weekly refresh
+// rebuilds; the parts adding up for every development is tests/unit-basis.test.js, strict.)
+siteTest('file tree: one root, the files on its land under it, earlier files on the same land folded, links to check (site check: Brampton|295 QUEEN ST E)', () => {
   const d = dev('Brampton|295 QUEEN ST E');
   const s = T.summary(d);
   // (SPA-2021-0162 names SPA-2019-0029, "previously envisioned for the site": js/tree.js 4·. The
@@ -29,7 +32,7 @@ test('file tree: one root, the files on its land under it, earlier files on the 
   assert.ok(site && site.n.some(n => n[0] === 'SPA-2026-0003'), 'the Dollarama façade is the site\'s other activity');
 });
 
-test('file tree: a block plan that states no count adds up its draft plans, and they come first', () => {
+siteTest('file tree: a block plan that states no count adds up its draft plans, and they come first (site check: Brampton|2055 BOVAIRD DR W)', () => {
   const d = dev('Brampton|2055 BOVAIRD DR W');
   const s = T.summary(d);
   assert.equal(s.top, 'PRE-2023-0100'); assert.equal(s.counted.length, 4);

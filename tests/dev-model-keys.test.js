@@ -18,19 +18,25 @@ function devNav(projects) {
   return require('../js/dev-nav.js');
 }
 
-test('every development opens by its key, a land split ("<key>#1") too; a branch key still opens the file on its own', { skip: !H.available() }, () => {
+test('every development opens by its key, a land split ("<key>#1") too', { skip: !H.available() }, () => {
   const { projects } = H.realDevs();
   const N = devNav(projects);
   const bad = projects.filter(p => N.projectByKey(p.key) !== p).map(p => p.key);
   assert.deepEqual(bad, []);
-  const gore = projects.find(p => p.key === 'Caledon|14275 THE GORE RD#1');
-  assert.ok(gore, 'the README example (21T-22002C) is a land split');
-  const sub = N.projectByKey(`${gore.key}#21T-22002C`);
-  assert.ok(sub && sub.parent === gore, 'its file opens on its own under it');
   assert.match(src('js/dev-nav.js'), /const own = find\(k\); if \(own\) return own;\n {4}const i = String\(k\)\.lastIndexOf\('#'\)/);
   // (one copy, navigation phase 5, M3: Records' full table finds a development by key through js/dev-nav.js)
   assert.doesNotMatch(src('js/devtab.js'), /function projectByKey\(|function subProject\(|const SUBS = new Map/, 'one copy: js/dev-nav.js (M3)');
   assert.match(src('js/devtab.js'), /const projectByKey = k => \(k && state\(\) \? N\(\)\.projectByKey\(k\) : null\);/);
+});
+
+// The README example: a site check, since that land split and its file follow the weekly data.
+siteTest('a branch key still opens the file on its own (site check: Caledon|14275 THE GORE RD#1, 21T-22002C)', { skip: !H.available() }, () => {
+  const { projects } = H.realDevs();
+  const N = devNav(projects);
+  const gore = projects.find(p => p.key === 'Caledon|14275 THE GORE RD#1');
+  assert.ok(gore, 'the README example (21T-22002C) is a land split');
+  const sub = N.projectByKey(`${gore.key}#21T-22002C`);
+  assert.ok(sub && sub.parent === gore, 'its file opens on its own under it');
 });
 
 test('opening a file on its own leaves its development\'s permit placement as built', { skip: !H.available() }, () => {

@@ -1,4 +1,5 @@
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
@@ -19,16 +20,21 @@ test('address keys: multi-address strings, number 0, municipality tails, highway
   assert.equal(A.civic('14337', '50', 'HWY', '', 'Caledon'), 'Caledon|14337|50|HWY|');
 });
 
-test('address points: the three 10625 Mississauga Rd files share one point; match rates hold', () => {
+test('address points: match rates hold', () => {
   const D = read('address-points.json');
-  global.PeelApp = { state: { addressPoints: D } };   // the module's root is globalThis under node
-  const recs = read('snapshot.json').records;
-  const ids = new Set(recs.filter(r => ['OZS-2021-0002', 'SP16-088.000', 'C04W14.009'].includes(r.ref)).flatMap(r => A.of(r).map(p => p.id)));
-  assert.equal(ids.size, 1, '10625 Mississauga Rd → one address point');
   assert.ok(parseFloat(D.stats.applications.rate) >= 75, `applications matched ${D.stats.applications.rate}`);
   assert.ok(parseFloat(D.stats.permits.rate) >= 80, `permits matched ${D.stats.permits.rate}`);
   for (const v of Object.values(D.a).slice(0, 500)) assert.ok(v[1] > 43.4 && v[1] < 44.1 && v[2] > -80.2 && v[2] < -79.4, 'in Peel');
-  delete global.PeelApp;
+});
+
+siteTest('address points: the three 10625 Mississauga Rd files share one point (site check: Brampton|10625 MISSISSAUGA RD, OZS-2021-0002, SP16-088.000, C04W14.009)', () => {
+  const D = read('address-points.json');
+  global.PeelApp = { state: { addressPoints: D } };   // the module's root is globalThis under node
+  try {
+    const recs = read('snapshot.json').records;
+    const ids = new Set(recs.filter(r => ['OZS-2021-0002', 'SP16-088.000', 'C04W14.009'].includes(r.ref)).flatMap(r => A.of(r).map(p => p.id)));
+    assert.equal(ids.size, 1, '10625 Mississauga Rd → one address point');
+  } finally { delete global.PeelApp; }
 });
 
 test('duplicate pairs sort same address point first, neighbours last', () => {
