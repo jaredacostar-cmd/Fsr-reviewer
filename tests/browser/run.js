@@ -3251,6 +3251,32 @@ async function pickView(page, ev, key, tap = false) {
     expect(/^Since the 2021 Census, Peel Region has added ≈[\d,]+ people in [\d,]+ dwellings; [\d,]+ more people are committed or not committed yet/.test(m.answer.trim()), `its headline (${m.answer.slice(0, 90)})`);
     expect(m.figs === CARDS && m.bars >= 2 && m.ids === 1, `the four cards and the chart, one #gc-chart (${m.figs} · ${m.bars} bars · ${m.ids})`);
     expect(/2051/.test(m.lists) && /Housing activity/.test(m.lists) && m.folds.includes('Population outlook'), `the 2051 forecast, housing activity, the outlook (${m.lists} · ${m.folds})`);
+    // (critic) A bar's tooltip, shown at the people bar's right end, stays inside the chart: no sideways scroll (it was a
+    // 676 px nowrap tip, css/app.css .grow-tip). The mouse fires the pointermove a tap's pointerdown does. (g21 review)
+    // Wrapped (3 or 4 lines) it is placed from its own height: it never covers the segment it describes.
+    const tipIn = async (chart, box) => {
+      const at = await ev(c => { const bar = [...document.querySelectorAll(`${c} .grow-bar`)].find(x => x.getClientRects().length), s = bar && [...bar.querySelectorAll('.gseg')].pop(); if (!s) return null; s.scrollIntoView({ block: 'center' }); const b = s.getBoundingClientRect(); return { x: b.right - 2, y: b.top + b.height / 2 }; }, chart);
+      if (!at) return { found: false };
+      await page.mouse.move(at.x, at.y); await wait(300);
+      return ev(([c, bx]) => {
+        const t = document.querySelector(`${c} .grow-tip`), p = document.querySelector(bx), bar = [...document.querySelectorAll(`${c} .grow-bar`)].find(x => x.getClientRects().length), sg = [...bar.querySelectorAll('.gseg')].pop().getBoundingClientRect(), tr = t.getBoundingClientRect();
+        return { found: true, shown: !!t && !t.hidden, fits: p.scrollWidth <= p.clientWidth, sw: p.scrollWidth, cw: p.clientWidth, h: Math.round(tr.height), covers: !t.hidden && !(tr.bottom <= sg.top || tr.top >= sg.bottom || tr.right <= sg.left || tr.left >= sg.right) };
+      }, [chart, box]);
+    };
+    { const t0 = await tipIn('#pnl-growth .growth-chart', '#analysis-panes'); expect(t0.found && t0.shown && t0.h > 30 && !t0.covers, `1440 px: the people bar's tooltip, wrapped, is clear of the bar it describes (${JSON.stringify(t0)})`); }
+    await page.mouse.move(5, 5); await wait(200);
+    // 1b. (g21 review) A file's record sheet sets its census DA; closed (× or Escape), Growth › 2021 existing at Peel is
+    // Peel's again: it headlined that one DA (the answer, the first card, no lists), on the map and on Home.
+    for (const how of ['×', 'Escape']) {
+      await ev(() => { const has = r => r.kind === 'application' && r.uid && r.units > 0, p = PeelApp.state.projects.find(q => q.lat != null && q.records && q.records.some(has)); PeelAerialCheck.showRecordDetail(p.records.find(has), p); });
+      await page.waitForFunction(() => PeelApp.state.daCtx, null, { timeout: 30000 }).catch(() => {}); await wait(800);
+      const set = await ev(() => !!PeelApp.state.daCtx && /^file:/.test(PeelApp.state.ss || ''));
+      if (how === '×') await page.click('#scope-body .pnl-x[data-scope-result-close]'); else await page.keyboard.press('Escape');
+      await wait(1500);
+      await ev(() => PeelAnalysisTabs.openTab('growth', 'existing')); await wait(1500);
+      const d = await ev(() => ({ da: !!PeelApp.state.daCtx, ss: PeelApp.state.ss || '', answer: ((document.querySelector('#pnl-growth .pnl-answer') || {}).textContent || '').trim(), fig: ((document.querySelector('#pnl-growth .pnl-fig .pnl-l') || {}).textContent || '').trim(), pill: !!document.querySelector('#growth-census-body [data-clear-da]') }));
+      expect(set && !d.da && !d.ss && /^Since the 2021 Census, Peel Region has added/.test(d.answer) && d.fig === '2021 Census' && !d.pill, `a file's sheet closed (${how}): 2021 existing is Peel's again, not the file's DA (${JSON.stringify({ set, ...d, answer: d.answer.slice(0, 90) })})`);
+    }
     // 2. Its full table: the whole block; Areas' full table: the plan areas only.
     await page.click('#pnl-growth [data-sec="footer"] [data-full-table]'); await wait(1500);
     const f = await ev(s => ({ census: eval(s[0]), byplan: eval(s[1]), chart: document.querySelectorAll('#gc-chart .grow-bar').length, cap: [...document.querySelectorAll('#pane-growth-census caption')].some(c => /Applications against the 2051 forecast/.test(c.textContent)), act: eval(s[2]), out: eval(s[3]) }), [shown('#pane-growth-census'), shown('#pane-growth-byplan'), shown('#pane-growth-census .ov-activity'), shown('#pane-growth-census .ov-outlook')]);
@@ -3279,7 +3305,7 @@ async function pickView(page, ev, key, tap = false) {
     await pickView(page, ev, 'growth:existing');
     await page.waitForFunction(() => !/^Loading/.test(((document.querySelector('#home .home-answer') || {}).textContent || '').trim()), null, { timeout: 60000 }).catch(() => {});
     const h = await ev(() => { const st = x => String(x || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); return { view: PeelWorkspaces.view(), views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()).join(), page: st(document.querySelector('#home .home-answer').innerHTML), map: st(PeelPanel.get('growth:existing').spec.answer), figs: [...document.querySelectorAll('#home .pnl-figs .pnl-fig .pnl-l')].map(x => x.textContent.trim()).join('|'), chart: !!document.querySelector('#home .page-chart .growth-chart .grow-bar') }; });
-    expect(h.view === 'growth:existing' && h.views === 'Pipeline,Areas,Forecast,2021 existing' && h.page === h.map && h.figs === CARDS && h.chart, `Home › Growth › 2021 existing is the map's (${JSON.stringify({ ...h, page: h.page.slice(0, 60), map: h.map.slice(0, 60) })})`);
+    expect(h.view === 'growth:existing' && h.views === 'Pipeline,Areas,Forecast,2021 existing' && h.page === h.map && /^Since the 2021 Census, Peel Region/.test(h.page) && h.figs === CARDS && h.chart, `Home › Growth › 2021 existing is the map's, Peel's (${JSON.stringify({ ...h, page: h.page.slice(0, 60), map: h.map.slice(0, 60) })})`);
     await page.locator('#home .page-foot [data-ws-go][data-ws-keep]', { hasText: 'Open the map' }).first().click(); await wait(2500);
     const o = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub() }));
     expect(o.mode === 'ws' && o.tab === 'growth' && o.sub === 'existing', `Open the map keeps 2021 existing (${JSON.stringify(o)})`);
@@ -3288,21 +3314,13 @@ async function pickView(page, ev, key, tap = false) {
     await ev(() => PeelWorkspaces.openPage('home')); await wait(2000); await pickView(page, ev, 'growth:existing');
     const p1 = await ev(() => { const r = document.querySelector('#home .page-subsecs'), hm = document.getElementById('home'); return { fits: !!r && r.scrollWidth <= r.clientWidth, tall: !!r && [...r.querySelectorAll('.page-sec')].every(b => b.getBoundingClientRect().height >= 44), home: hm.scrollWidth <= hm.clientWidth, doc: document.documentElement.scrollWidth }; });
     expect(p1.fits && p1.tall && p1.home && p1.doc <= 390, `phone: Home's four views fit, 44 px, no sideways scroll (${JSON.stringify(p1)})`);
-    // (critic) A bar's tooltip, shown at the people bar's right end, stays inside the chart: no sideways scroll (it was a
-    // 676 px nowrap tip, css/app.css .grow-tip). The mouse fires the pointermove a tap's pointerdown does.
-    const tipIn = async (chart, box) => {
-      const at = await ev(c => { const bar = [...document.querySelectorAll(`${c} .grow-bar`)].find(x => x.getClientRects().length), s = bar && [...bar.querySelectorAll('.gseg')].pop(); if (!s) return null; s.scrollIntoView({ block: 'center' }); const b = s.getBoundingClientRect(); return { x: b.right - 2, y: b.top + b.height / 2 }; }, chart);
-      if (!at) return { found: false };
-      await page.mouse.move(at.x, at.y); await wait(300);
-      return ev(([c, bx]) => { const t = document.querySelector(`${c} .grow-tip`), p = document.querySelector(bx); return { found: true, shown: !!t && !t.hidden, fits: p.scrollWidth <= p.clientWidth, sw: p.scrollWidth, cw: p.clientWidth }; }, [chart, box]);
-    };
     const t1 = await tipIn('#home .page-chart .growth-chart', '#home');
-    expect(t1.found && t1.shown && t1.fits, `phone: Home's chart tooltip stays inside (${JSON.stringify(t1)})`);
+    expect(t1.found && t1.shown && t1.fits && !t1.covers, `phone: Home's chart tooltip stays inside, clear of its bar (${JSON.stringify(t1)})`);
     await ev(() => { PeelWorkspaces.setMode('full'); PeelApp.setAnalysisSnap('half'); PeelAnalysisTabs.openTab('growth', 'existing'); }); await wait(2000);
     const p2 = await ev(() => { const r = document.querySelector('.f-subtabs[data-pane="growth"]'), p = document.getElementById('analysis-panes'); return { fits: r.scrollWidth <= r.clientWidth, panes: p.scrollWidth <= p.clientWidth, figs: document.querySelectorAll('#pnl-growth .pnl-fig').length, doc: document.documentElement.scrollWidth }; });
     expect(p2.fits && p2.panes && p2.figs === 4 && p2.doc <= 390, `phone: the map's four chips fit, the four cards, no sideways scroll (${JSON.stringify(p2)})`);
     const t2 = await tipIn('#pnl-growth .growth-chart', '#analysis-panes');
-    expect(t2.found && t2.shown && t2.fits, `phone: the panel's chart tooltip stays inside (${JSON.stringify(t2)})`);
+    expect(t2.found && t2.shown && t2.fits && !t2.covers, `phone: the panel's chart tooltip stays inside, clear of its bar (${JSON.stringify(t2)})`);
   });
 
   await browser.close(); srv.close();

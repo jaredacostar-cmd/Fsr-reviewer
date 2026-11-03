@@ -25,6 +25,7 @@
   const DI = () => window.PeelDcInfra;
   const P = window.PeelPhases;
   const TB = () => window.PeelTopbar;
+  const CA = () => window.PeelCensusAreas;
 
   const PLANTS = ['Lakeview', 'Clarkson', 'Inglewood'];
   const KIND_LABEL = { plant: 'Wastewater treatment plant', ps: 'Pumping station catchment', block: 'Wastewater block and everything upstream', zone: 'Water pressure zone', wsys: 'Water system (lake-based)' };
@@ -72,7 +73,11 @@
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
   // (the tabs follow: a tab or view the scope left out comes back, an open tab redraws at Peel; navigation phase 8a)
-  function clear() { if (App()) App().state.ss = null; result = null; lower(); if (AT() && AT().rescope) AT().rescope(); }
+  function clear() {
+    const was = result; if (App()) App().state.ss = null; result = null; lower();
+    if (!(window.DevScope && window.DevScope.current())) dropFileDa(was);
+    if (AT() && AT().rescope) AT().rescope();
+  }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
 
   // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
@@ -94,11 +99,19 @@
   const lower = () => { const A = App(), was = raisedFrom; raisedFrom = null; if (was && A && A.getAnalysisSnap && A.getAnalysisSnap() === 'full') A.setAnalysisSnap(was, false); };
   const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
   function devKeysOf(html) { const out = new Set(); String(html || '').replace(/data-dev="([^"]+)"/g, (m, k) => { out.add(k.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")); return m; }); return out.size ? out : null; }
+  // A file's record sheet narrows the census to its dissemination area (js/aerial-check.js showRecordDetail sets
+  // App().state.daCtx); the DA lives as long as the sheet. It goes as the sheet closes (×, its trail step, Escape,
+  // the trail's Peel, Start over, a tab it leaves out) or another result replaces it, so Growth › 2021 existing and
+  // the demand at Peel are Peel's again, not that DA's. (A file result never keeps the development: the DA is the
+  // file's. A development opening over the sheet (clear() with DevScope open) sets its own.)
+  const isFileRef = ref => String(ref || '').startsWith('file:');
+  function dropFileDa(was) { if (was && isFileRef(was.ref) && CA() && CA().setDaContext) CA().setDaContext(null); }
   function openResult(o) {
     o = o || {};
     const ref = o.ref || `tool:${slug(o.title)}`;
     if (window.DevScope && window.DevScope.current() && !o.keepDev) window.DevScope.close();
     const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
+    if (!isFileRef(ref)) dropFileDa(result);   // (a file after a file: its own DA, set before it opens)
     result = { ref, title: o.title || 'Result', group: o.group || null, html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, keepDev: !!o.keepDev && !!(window.DevScope && window.DevScope.current()), v: ++resultV };
     App().state.ss = ref; showAll = false;
     // Layers that drew a selection for an earlier result (EA / capital highlights) drop it when replaced.
@@ -118,8 +131,10 @@
   }
   function closeResult() {
     if (!result) return false;
+    const was = result;
     result = null; lower();
     if (isResultRef(App().state.ss)) App().state.ss = null;
+    dropFileDa(was);   // (at the scope it leaves for: the redraw it makes reads Peel, not the sheet)
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     if (AT() && AT().rescope) AT().rescope();   // (the tabs it left out come back: navigation phase 8a)

@@ -184,7 +184,8 @@ test('1. every scope kind (navigation phase 8a, design §3.5): one kind for ever
   assert.doesNotMatch(at, /\bt\.hidden =/);
   assert.match(src('css/app.css'), /\n\.f-tab\.f-tab-off \{ display: none; \}\n/);
   const ss = src('js/svc-scope.js');
-  assert.match(ss, /function clear\(\) \{ if \(App\(\)\) App\(\)\.state\.ss = null; result = null; lower\(\); if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\); \}/);
+  // (g21 review: a file's sheet cleared drops its census DA too, unless a development is opening over it)
+  assert.match(ss, /function clear\(\) \{\n {4}const was = result; if \(App\(\)\) App\(\)\.state\.ss = null; result = null; lower\(\);\n {4}if \(!\(window\.DevScope && window\.DevScope\.current\(\)\)\) dropFileDa\(was\);\n {4}if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\);\n {2}\}/);
   assert.match(ss, /function closeResult\(\) \{[^]*?Sh\(\)\.viewLink\.write\(\);\n\s+if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\);[^\n]*\n\s+return true;\n\s+\}/);
   assert.match(src('js/svc-data.js'), /SvcTab\(\)\.renderSvcTab\(\);\n\s+App\(\)\.applyFilters\(\);\n\s+if \(AT\(\)\.rescope\) AT\(\)\.rescope\(\);/);
 });

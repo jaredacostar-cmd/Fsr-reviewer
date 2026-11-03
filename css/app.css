@@ -997,7 +997,8 @@ h2.label, .label { font-size: var(--fs-2); text-transform: none; letter-spacing:
 .grow-legend li { display: flex; align-items: center; gap: var(--space-2); }
 .grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .gsw { display: inline-block; width: 12px; height: 12px; border-radius: 4px; }
-/* (it wraps at 220 px, the box census-view.js places it for: a tapped bar never makes a phone's panel scroll sideways) */
+/* (it wraps at 220 px, the box census-view.js places it for: a tapped bar never makes a phone's panel scroll sideways;
+   placeTip puts it above the bar from its own height, 1 to 4 lines, or below the bar with no room above) */
 .grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: var(--fs-2); padding: var(--space-1) var(--space-2); border-radius: 4px; white-space: normal; max-width: 220px; z-index: 5; }
 
 /* Growth tab (Phase 4): completions-per-year strip and the "See all" expander. */

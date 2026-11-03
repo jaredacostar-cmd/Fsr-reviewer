@@ -93,7 +93,11 @@
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;
-    const da = App().state.daCtx;
+    // A file's record sheet narrows the block to its census DA (js/aerial-check.js showRecordDetail); only there (the
+    // sheet's scope, 'file', where Growth is off and the block fills its hidden pane). At an area a DA is a leftover
+    // of a sheet already closed (js/svc-scope.js drops it as the sheet closes): never this view's headline.
+    const A = AT(), kind = A && A.scopeKind ? A.scopeKind() : null;
+    const da = !kind || kind === 'file' ? App().state.daCtx : null;
     // The baseline year changed under a selected project: find its DA for the new year.
     if (da && da.year !== Y) { CA().setDaContext(da.project); return; }
     const g = { muni: App().state.muni, sp: App().state.sp, mtsa: App().state.mtsa };
@@ -112,18 +116,16 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(roundPop(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
     const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
-    const start = App().timeActive() ? (App().state.yearFrom ?? App().state.yearMin) : null;
-    const earliest = App().state.censuses[App().state.censuses.length - 1].year;
-    // (js/map-census.js baselineCensus: with all years, the latest census)
-    const why = start == null ? `all years: the latest census (${Y})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
+    const why = baselineWhy(Y, App().state.yearFrom ?? null, App().timeActive(), App().state.censuses[App().state.censuses.length - 1].year);
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     // The panel, worked out from the same values: its answer is the headline, its figures the four cards, its
     // method the ⓘ line (one copy of each). Only where the view shows (an area): at a servicing scope or a
     // selection the block still renders its hidden pane, and must not replace the area's panel, which Home reads.
-    // (the housing rows worked out once, for both)
-    const A = AT(), shows = !(A && A.hiddenAt && A.scopeKind && A.hiddenAt(A.scopeKind(), 'growth', 'existing')), hs = da ? null : housingActivityRows();
+    // (the housing rows and the 2051 rows worked out once, for both: the 2051 rows sum every municipality's
+    // applications, so a second pass cost each filter change as much again)
+    const shows = !(A && A.hiddenAt && A.scopeKind && A.hiddenAt(A.scopeKind(), 'growth', 'existing')), hs = da ? null : housingActivityRows(), fc = forecastRows(bc, da);
     const spec = existingPanelSpec({ name, Y, why, base, gr, da, share, asof, censusDay: CA().censusDay(bc.date),
-      fc: shows && !da ? forecastRows(bc) : null, housing: shows ? hs : null, outlook: shows && !da ? outlookCardHTML(true, true) : '' });
+      fc: shows ? fc : null, housing: shows ? hs : null, outlook: shows && !da ? outlookCardHTML(true, true) : '' });
     body.innerHTML = `
       ${hlP(spec.answer)}
       ${da ? `<div class="c-ctx"><button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(CA().daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
@@ -132,11 +134,20 @@
       <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
       ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('svc:network', 'Servicing › Network')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
-      ${forecastTableHTML(bc)}
+      ${forecastTableHTML(bc, fc)}
       ${da ? '' : housingActivityHTML(hs) + outlookCardHTML(true)}
       <p class="small muted">ⓘ ${esc(name)} · ${spec.method}</p>`;
     renderGrowthChart(base, gr, Y, $('#gc-chart'));
     if (shows && root.PeelPanel) root.PeelPanel.set('growth:existing', spec);
+  }
+
+  // Why the block uses the census it does (pure): the reason in the identity and the ⓘ line, read as
+  // js/map-census.js baselineCensus reads the timeline (its start alone; with all years, or no start, the latest).
+  // from: the timeline's first year (null with none); active: a timeline is set (a start, an end or both);
+  // earliest: the earliest census with data.
+  function baselineWhy(Y, from, active, earliest) {
+    if (from == null) return active ? `timeline with no start year: the latest census (${Y})` : `all years: the latest census (${Y})`;
+    return from < earliest ? `timeline starts ${from}; earliest census with data is ${earliest}` : `timeline starts ${from}`;
   }
 
   // The four cards, one copy for the pane's tiles and the panel's figures (pure): the census, then each layer
@@ -193,9 +204,10 @@
   // the full built / approved / proposed split behind "See all".
   // The rows (one copy of the sums: the table and the panel's list): each municipality, Peel last; null with
   // no forecast or at a DA.
-  function forecastRows(bc) {
+  // da: the census DA the block is narrowed to (renderGrowthCensus's; by default the app's).
+  function forecastRows(bc, da = App().state.daCtx) {
     const F = App().state.reports && App().state.reports.forecast2051;
-    if (!F || App().state.daCtx) return null;
+    if (!F || da) return null;
     const munis = Object.keys(F.municipalities).filter(m => !App().state.muni || m === App().state.muni);
     const rows = munis.map(m => {
       const f = F.municipalities[m], projects = App().state.projects.filter(p => p.municipality === m && p.phase !== 'cancelled');
@@ -206,8 +218,8 @@
     if (munis.length > 1) rows.push(rows.reduce((t, r) => ({ m: 'Peel', fp: t.fp + r.fp, fu: t.fu + r.fu, fj: t.fj + r.fj, p: t.p.map((v, i) => v + r.p[i]), u: t.u.map((v, i) => v + r.u[i]), j: t.j.map((v, i) => v + r.j[i]) }), { fp: 0, fu: 0, fj: 0, p: [0, 0, 0], u: [0, 0, 0], j: [0, 0, 0] }));
     return rows;
   }
-  function forecastTableHTML(bc) {
-    const rows = forecastRows(bc); if (!rows) return '';
+  function forecastTableHTML(bc, rows = forecastRows(bc)) {
+    if (!rows) return '';
     const F = App().state.reports.forecast2051;
     const pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
     const sum = a => a[0] + a[1] + a[2];
@@ -257,6 +269,16 @@
     return `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
       <ul class="grow-legend">${legend}</ul><div class="grow-tip" hidden></div>`;
   }
+  // A chart's tooltip placed from its own height, once its text is set: it wraps at 220 px (css/app.css .grow-tip),
+  // so a long label is 3 or 4 lines (58 to 76 px; it was placed for one line, 34 px above the pointer, and covered the
+  // bar). Its bottom 6 px above the segment it describes, or its top 6 px below it where the chart has no room above
+  // (the first bar), so it never covers that bar. Left: after the pointer (x: a hover or a tap), kept in the chart for
+  // its 220 px; at the chart's left on keyboard focus (x null). box: the chart's.
+  function placeTip(tip, box, seg, x) {
+    tip.style.left = x == null ? '0px' : `${Math.min(box.width - 220, Math.max(0, x - box.left + 12))}px`;   // (first: its wrap follows)
+    const r = seg.getBoundingClientRect(), top = r.top - 6 - box.top - tip.offsetHeight;
+    tip.style.top = `${top >= 0 ? top : r.bottom - box.top + 6}px`;
+  }
   // Hover / tap tooltip for the growth bars (delegated: both growth sub-views render a chart).
   const growTip = e => {
     if (!e.target.closest) return;
@@ -265,9 +287,7 @@
     if (!tip) return;
     if (!s) { tip.hidden = true; return; }
     tip.textContent = s.dataset.tip; tip.hidden = false;
-    const box = chart.getBoundingClientRect();
-    tip.style.left = `${Math.min(box.width - 220, Math.max(0, e.clientX - box.left + 12))}px`;
-    tip.style.top = `${e.clientY - box.top - 34}px`;
+    placeTip(tip, chart.getBoundingClientRect(), s, e.clientX);
   };
   document.addEventListener('pointermove', growTip);
   document.addEventListener('pointerdown', growTip);   // tap on phones
@@ -280,7 +300,7 @@
     if (!e.target.closest) return;
     const chart = e.target.closest('.growth-chart'); if (!chart) return;
     const s = e.target.closest('[data-tip]'), tip = chart.querySelector('.grow-tip'); if (!s || !tip) return;
-    tip.textContent = s.dataset.tip; tip.hidden = false; tip.style.left = '0px'; tip.style.top = '-28px';
+    tip.textContent = s.dataset.tip; tip.hidden = false; placeTip(tip, chart.getBoundingClientRect(), s, null);
   });
 
   // Hover / tap tooltip for the capacity bars (wastewater plants, water capacity).
@@ -289,9 +309,7 @@
     const tip = ch.querySelector('.grow-tip'), sEl = e.target.closest('[data-tip]'); if (!tip) return;
     if (!sEl) { tip.hidden = true; return; }
     tip.textContent = sEl.dataset.tip; tip.hidden = false;
-    const box = ch.getBoundingClientRect();
-    tip.style.left = `${Math.min(box.width - 220, Math.max(0, e.clientX - box.left + 12))}px`;
-    tip.style.top = `${e.clientY - box.top - 34}px`;
+    placeTip(tip, ch.getBoundingClientRect(), sEl, e.clientX);
   };
   document.addEventListener('pointermove', capTip);
   document.addEventListener('pointerdown', capTip);
@@ -323,7 +341,7 @@
     return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Data checks')}</p>`;
   }
   const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML,
-    growthChartHTML, forecastRows, existingCards, existingPanelSpec };
+    growthChartHTML, forecastRows, existingCards, existingPanelSpec, baselineWhy, placeTip };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCensusView = api;
 })(typeof window !== 'undefined' ? window : globalThis);

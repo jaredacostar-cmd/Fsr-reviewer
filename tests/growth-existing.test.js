@@ -134,7 +134,9 @@ test('its panel (pure): the headline, the four cards, the chart, the 2051 foreca
   assert.equal(s16.figures[0].label, '2016 Census');
   assert.ok(s16.head.identity.includes('2016 Census baseline (timeline starts 2018)'));
   assert.match(s16.answer, /^Since the 2016 Census, /);
-  // A DA (a file's record sheet, where Growth is not shown): no forecast or housing lists, no outlook.
+  // A DA: a file's record sheet only (its scope 'file', where Growth is off, so the block fills its hidden pane and
+  // sets no panel; a DA left over at an area is ignored and dropped as the sheet closes: g21 review, below). No
+  // forecast or housing lists, no outlook.
   const sd = CV.existingPanelSpec({ ...O, name: 'DA 3521 (Brampton), around X', base: { population: 800, dwellings: 300, das: 1 }, da: { id: '3521' } });
   assert.equal(sd.lists.filter(l => l.rows.length).length, 0);
   assert.equal(sd.folds.length, 0);
@@ -159,7 +161,10 @@ test('the chart (pure): people, dwellings and jobs, the census first; renderGrow
   CV.renderGrowthChart({ population: 0, dwellings: 0 }, GR, 2021, el2, { builtLabel: 'Completed since 2021 on the developments shown' });
   assert.ok(el2.innerHTML.includes('Completed since 2021 on the developments shown') && !el2.innerHTML.includes('g-base'));
   // (the pane's table and the panel's list read the one copy of the forecast sums)
-  assert.match(src('js/census-view.js'), /function forecastTableHTML\(bc\) \{\n    const rows = forecastRows\(bc\); if \(!rows\) return '';/);
+  // (worked out once a render: renderGrowthCensus hands its rows to the table; g21 review)
+  assert.match(src('js/census-view.js'), /function forecastTableHTML\(bc, rows = forecastRows\(bc\)\) \{\n    if \(!rows\) return '';/);
+  assert.equal((src('js/census-view.js').match(/(?<!function )forecastRows\(bc/g) || []).length, 2, 'the table’s default and the render’s one pass');
+  assert.match(src('js/census-view.js'), /fc = forecastRows\(bc, da\);[^]*\$\{forecastTableHTML\(bc, fc\)\}/);
 });
 
 test('links: Pipeline’s chart, the targets guide, Areas’ panel and its How? files', () => {
@@ -187,7 +192,7 @@ test('the phone: Home’s four views without a swipe; the chart’s tooltip wrap
   assert.match(css, /\.grow-tip \{[^}]*white-space: normal;[^}]*max-width: 220px;/);
   assert.doesNotMatch(css, /\.grow-tip \{[^}]*nowrap/);
   const cv = src('js/census-view.js');
-  assert.equal((cv.match(/Math\.min\(box\.width - 220,/g) || []).length, 2, 'both tooltips placed for a 220 px box');
+  assert.equal((cv.match(/Math\.min\(box\.width - 220,/g) || []).length, 1, 'one placement for both charts, for a 220 px box');
 });
 
 test('the baseline words follow the code: with all years, the latest census', () => {
@@ -234,4 +239,119 @@ test('words: the tour, Growth’s ⓘ, What moved where and the docs name 2021 e
   for (const [f, s] of [['docs/guide/README.md', guide], ['docs/method/README.md', method], ['docs/data/README.md', data]]) {
     assert.doesNotMatch(s, /Housing activity\*\* \(Growth › Areas\)|Population outlook\*\* card in Growth › Areas|Growth since the census \(Growth › Areas\)|in Growth › Areas' full table \(the census view\)/, f);
   }
+});
+
+// ---- g21 review --------------------------------------------------------------------------------------------------
+// The tooltip wraps at 220 px (3 or 4 lines on a long label, 58 to 76 px) but was placed for one line (34 px above the
+// pointer; -28 px on focus), so it covered the bar it describes: now it is placed from its own height, above the
+// segment, or below it where the chart has no room above.
+test('the chart’s tooltip is placed from its own height: above the bar it describes, or below it, never over it (g21 review)', () => {
+  const CV = loadCV();
+  const seg = (top, h = 18) => ({ getBoundingClientRect: () => ({ top, bottom: top + h }) });
+  const box = { top: 100, left: 50, width: 400 };
+  const place = (s, x, h = 70) => { const tip = { style: {}, offsetHeight: h }; CV.placeTip(tip, box, s, x); const t = box.top + parseFloat(tip.style.top); return { left: tip.style.left, top: t, bottom: t + h }; };
+  const clear = (p, s) => p.bottom <= s.getBoundingClientRect().top || p.top >= s.getBoundingClientRect().bottom;
+  // The jobs bar (room above): above it, 6 px clear, whatever its height (one line or four).
+  for (const h of [23, 58, 76]) {
+    const s = seg(200), p = place(s, 300, h);
+    assert.equal(p.bottom, 194, `${h} px: its bottom 6 px above the bar`); assert.ok(clear(p, s));
+  }
+  // The people bar at the chart's top (no room above): below it.
+  { const s = seg(110), p = place(s, 300); assert.equal(p.top, 134); assert.ok(clear(p, s)); }
+  // Left: after the pointer, kept inside the 220 px box; focus at the chart's left, as before.
+  assert.equal(place(seg(200), 120).left, '82px');
+  assert.equal(place(seg(200), 440).left, '180px');
+  { const s = seg(110), p = place(s, null); assert.equal(p.left, '0px'); assert.ok(clear(p, s)); }
+  { const s = seg(200), p = place(s, null); assert.equal(p.bottom, 194); }
+  // Each handler sets the text first (its height follows), then places it; the growth chart's focus too.
+  const cv = src('js/census-view.js');
+  assert.match(cv, /tip\.textContent = s\.dataset\.tip; tip\.hidden = false;\n {4}placeTip\(tip, chart\.getBoundingClientRect\(\), s, e\.clientX\);/);
+  assert.match(cv, /tip\.textContent = sEl\.dataset\.tip; tip\.hidden = false;\n {4}placeTip\(tip, ch\.getBoundingClientRect\(\), sEl, e\.clientX\);/);
+  assert.match(cv, /tip\.textContent = s\.dataset\.tip; tip\.hidden = false; placeTip\(tip, chart\.getBoundingClientRect\(\), s, null\);/);
+  assert.doesNotMatch(cv, /- 34\}px|'-28px'/);
+});
+
+// A file's record sheet sets its census DA (js/aerial-check.js showRecordDetail); closing the sheet (×, Escape, the
+// trail's Peel, Start over) left it set, so Growth › 2021 existing at Peel headlined that one DA. js/svc-scope.js now
+// drops it as the sheet closes or another result replaces it.
+function loadScope(o = {}) {
+  const das = [], st = { ss: null };
+  const window = { PeelUtil: require('../js/util.js'), PeelDemand: {}, PeelPhases: {},
+    PeelApp: { state: st, applyFilters() {} }, PeelAnalysisTabs: { setFootPref() {}, showFootTab() {}, rescope() {} },
+    PeelOverviewTab: { renderOverview() {} }, PeelShare: { viewLink: { write() {} } },
+    PeelCensusAreas: { setDaContext: p => das.push(p) }, DevScope: { current: () => o.dev || null, close() {} } };
+  const document = { addEventListener() {}, getElementById: () => null, dispatchEvent() {} };
+  const ctx = { window, document, CustomEvent: function CustomEvent() {}, module: undefined, globalThis: {} };
+  vm.runInNewContext(src('js/svc-scope.js'), ctx);
+  return { S: window.PeelSvcScope, das, st, window };
+}
+test('a file’s census DA goes as its record sheet closes or another result replaces it (g21 review)', () => {
+  // × (and the trail's step, Escape and the trail's Peel, through closeResult): dropped, after the scope is Peel's.
+  { const L = loadScope(); L.S.openResult({ ref: 'file:u1' }); assert.deepEqual(L.das, []);
+    let ssAtDrop; L.window.PeelCensusAreas.setDaContext = p => { ssAtDrop = L.st.ss; L.das.push(p); };
+    assert.equal(L.S.closeResult(), true); assert.deepEqual(L.das, [null]); assert.equal(ssAtDrop, null, 'the redraw it makes reads Peel'); }
+  // Start over (clear() before closeResult, which then finds nothing open): dropped.
+  { const L = loadScope(); L.S.openResult({ ref: 'file:u1' }); L.S.clear(); assert.deepEqual(L.das, [null]); assert.equal(L.S.closeResult(), false); }
+  // Another file: its own DA (set before it opens), kept; a card or a tool's result after it: dropped.
+  { const L = loadScope(); L.S.openResult({ ref: 'file:u1' }); L.S.openResult({ ref: 'file:u2' }); assert.deepEqual(L.das, []);
+    L.S.openResult({ ref: 'dcwork:7' }); assert.deepEqual(L.das, [null]); L.S.closeResult(); assert.deepEqual(L.das, [null], 'once'); }
+  // Any other result: the DA is not its own (a development's stays with the development).
+  { const L = loadScope(); L.S.openResult({ ref: 'tool:x' }); L.S.closeResult(); L.S.openResult({ ref: 'pipe:3' }); L.S.clear(); assert.deepEqual(L.das, []); }
+  // A development opening over the sheet (DevScope.open: clear(), then its own DA): not dropped under it.
+  { const L = loadScope({ dev: { key: 'k' } }); L.S.openResult({ ref: 'file:u1', keepDev: true }); L.S.clear(); assert.deepEqual(L.das, []); }
+  // (and the paths that close it reach closeResult or clear: ×, Escape, the trail's Peel, Start over)
+  assert.match(src('js/overview-tab.js'), /\[data-scope-result-close\]'\)\) root\.PeelSvcScope\.closeResult\(\);/);
+  assert.match(src('js/tools.js'), /closeResult\(\) \{ const S = [^}]*S\.closeResult\(\)\); \}/);
+  const tb = src('js/topbar.js'), so = tb.slice(tb.indexOf('function startOver()'));
+  assert.match(so, /^function startOver\(\) \{[^]*?window\.PeelSvcScope\.clear\(\);/);
+});
+
+// renderGrowthCensus in a vm with the app stubbed: a DA left in the state is the block's only at a file's sheet.
+function renderCensus({ kind, daCtx, yearFrom = null, yearTo = null }) {
+  const nodes = { '#growth-census-body': { innerHTML: '' }, '#gc-chart': { innerHTML: '' } }, sets = [];
+  const layer = (population, units) => ({ population, units, ha: 0, ii: 0 });
+  const state = { projects: [{ key: 'p' }], muni: '', sp: [], mtsa: [], criteria: {}, censuses: [{ year: 2021 }, { year: 2016 }], daCtx, yearFrom, yearTo, reports: null, housing: null };
+  const window = { PeelUtil: { ...require('../js/util.js'), $: s => nodes[s] || null }, PeelDemand: {},
+    PeelPanel: { ...PN, set: (k, s) => sets.push([k, s]) },
+    PeelApp: { state, timeActive: () => state.yearFrom != null || state.yearTo != null },
+    PeelAnalysisTabs: { scopeKind: () => kind, hiddenAt: k => k !== 'area' },
+    PeelCensusAreas: { baselineCensus: () => ({ year: yearFrom != null && yearFrom < 2021 ? 2016 : 2021, das: [1], date: '2021-05-11' }), syncDaYear() {}, censusDay: () => 'May 11, 2021', setDaContext() {}, daScopeName: () => 'Peel' },
+    PeelSvcTab: { ensureSvcModel() {}, svcJobs: () => ({ jbuilt: 0, japproved: 0, jproposed: 0 }) },
+    PeelDemandUI: { freshness: () => [{ date: '2026-10-31' }] }, PeelDevVerdict: { homeLine: (k, t) => t } };
+  const PeelAreas = { censusTotals: () => ({ population: 1000000, dwellings: 350000, das: 1650 }), inGeo: () => true,
+    growthSince: () => ({ built: layer(60000, 20000), approved: layer(90000, 30000), proposed: layer(150000, 52000) }),
+    ladderLayers: g => ({ committed: g.approved, notYet: g.proposed }) };
+  const ctx = { window, document: { addEventListener() {} }, PeelAreas };
+  ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/census-view.js'), ctx);
+  window.PeelCensusView.renderGrowthCensus();
+  return { body: nodes['#growth-census-body'].innerHTML, sets };
+}
+test('Growth › 2021 existing at Peel is Peel’s, a DA left in the state or not; a file’s sheet keeps its DA (g21 review)', () => {
+  const DA = { id: '35212182', pop: 800, dw: 300, muni: 'Brampton', title: '0 MISSISSAUGA RD', year: 2021, projects: [{ key: 'p', phase: 'approved' }], keys: new Set(['p']), project: { key: 'p' } };
+  const peel = renderCensus({ kind: 'area', daCtx: DA });
+  assert.equal(peel.sets.length, 1); assert.equal(peel.sets[0][0], 'growth:existing');
+  assert.match(peel.sets[0][1].answer, /^Since the 2021 Census, Peel Region has added /);
+  assert.ok(!peel.body.includes('DA 35212182') && !peel.body.includes('data-clear-da'), 'the block: Peel’s, no DA pill');
+  assert.equal(peel.sets[0][1].figures[0].label, '2021 Census');
+  // At the file's sheet (Growth off there: its hidden pane only, no panel set): the file's DA.
+  const file = renderCensus({ kind: 'file', daCtx: DA });
+  assert.equal(file.sets.length, 0);
+  assert.match(file.body, /Since the 2021 Census, DA 35212182 \(Brampton\), around 0 MISSISSAUGA RD has added/);
+});
+
+// The reason the ⓘ line gives for the census it uses reads the timeline as js/map-census.js baselineCensus does (its
+// start alone): with only the timeline's end set it named a start (the first year with data) and the earliest census
+// while the baseline was the latest.
+test('the census-year reason follows the baseline: the start alone; no start, the latest census (g21 review)', () => {
+  const CV = loadCV();
+  assert.equal(CV.baselineWhy(2021, null, false, 2016), 'all years: the latest census (2021)');
+  assert.equal(CV.baselineWhy(2021, null, true, 2016), 'timeline with no start year: the latest census (2021)');
+  assert.equal(CV.baselineWhy(2016, 2018, true, 2016), 'timeline starts 2018');
+  assert.equal(CV.baselineWhy(2016, 2010, true, 2016), 'timeline starts 2010; earliest census with data is 2016');
+  assert.equal(CV.baselineWhy(2021, 2023, true, 2016), 'timeline starts 2023');
+  // (rendered: only the end set, the 2021 baseline and its reason agree)
+  const r = renderCensus({ kind: 'area', daCtx: null, yearTo: 2023 });
+  assert.match(r.sets[0][1].method, /^2021 Census baseline \(timeline with no start year: the latest census \(2021\)\)/);
+  assert.doesNotMatch(r.body, /earliest census with data/);
 });

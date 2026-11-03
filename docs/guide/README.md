@@ -2150,7 +2150,13 @@ plant or pressure zone; its method says where the census went.
   starts 2016 to 2020, or before 2016, the first card is *2016 Census*, the answer *Since the 2016 Census, …* and the
   identity line *… · 2016 Census baseline (timeline starts …)*. All years uses the latest, 2021 (`js/map-census.js`
   `baselineCensus`): the ⓘ line said *all years: earliest census with data (2016)* while it used 2021, and now says *all
-  years: the latest census (2021)*, as *Census baseline follows the timeline* (above) does.
+  years: the latest census (2021)*, as *Census baseline follows the timeline* (above) does. The baseline reads the
+  timeline's start alone, and so does the reason: with only its end set, *timeline with no start year: the latest
+  census (2021)* (it named the first year with data and the earliest census while it used 2021; review).
+- **A file's census area**: a file's record sheet narrows the block to the file's dissemination area (its hidden pane:
+  Growth is off at a file). That DA goes as the sheet closes (×, its trail step, Escape, the trail's Peel, Start over) or
+  another result replaces it; it stayed set before, so 2021 existing at Peel headlined that one DA, on the map and on
+  Home (review). At an area the block never reads a DA.
 - **Loading**: the block used to hide itself (and switch the tab) while the census loaded, which inside Areas left the
   plan tables. As a view of its own it says *Census data is still loading.* in place, and Home's view *Loading Growth ›
   2021 existing…* until the panel is set: a view is never blank.
@@ -2158,6 +2164,8 @@ plant or pressure zone; its method says where the census went.
   (the row already scrolls inside itself), and a bar's tooltip in the growth chart (`.grow-tip`) wraps at 220 px: it
   was one line (676 px wide at the people bar's end), so a tap there made `#analysis-panes` scroll sideways at 390 px.
   It now stays inside the chart, on the map, on Home and in Growth › Pipeline's and the capacity charts' full tables.
+  Wrapped, it is 3 or 4 lines, so it is placed from its own height (`js/census-view.js` `placeTip`): above the bar it
+  describes, or below it where the chart has no room above (the first bar); placed for one line, it covered the bar.
 - **Help**: *What moved where* has the rows (*Growth › Census & 2051* → 2021 existing; *Growth › By plan* → Areas; the
   census part of Areas → 2021 existing); the map tour's Tabs step and Growth's ⓘ name the four views.
 
@@ -2174,9 +2182,7 @@ existing*: the map and Home, Areas' full table, the stored pick and the old link
 
 - **Left for later** (named, not forgotten): a development's own 2021 existing (its dissemination area's census and the
   growth in it) would be a new view, offered to the owner; *Selected project → its census area* (above) has been stale
-  since navigation phase 5 (a development never shows the block); and with only the timeline's end set, the ⓘ line
-  names a start (the first year with data) and the earliest census, while the baseline is the latest census
-  (`baselineCensus` reads only the start).
+  since navigation phase 5 (a development never shows the block).
 
 ## Help and This week
 
