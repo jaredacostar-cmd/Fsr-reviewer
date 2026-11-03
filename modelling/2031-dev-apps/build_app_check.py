@@ -90,9 +90,9 @@ def assess(a, m):
             flag('High', 'Withdrawn or cancelled in the app',
                  f"{m.get('title')}: every file is withdrawn, refused, cancelled or expired. This growth may not happen.")
         if non_residential(m):
-            flag('High', 'App shows a non-residential development',
-                 f"{m.get('title')} has no homes in the app ({', '.join((m.get('types') or [])[:3])}). If the Region "
-                 'population is an employment equivalent this is expected; otherwise the population may be wrong.')
+            flag('Low', 'Employment equivalent (D15)',
+                 f"{m.get('title')} is non-residential in the app ({', '.join((m.get('types') or [])[:3])}); the Region "
+                 'population is an employment equivalent (decision D15). For information.')
         if by2021 and (by2021 >= 0.5 * max(units, 1) or (m.get('phase') == 'completed' and not after)):
             flag('High', 'Probably in the 2021 existing population (D13)',
                  f'{by2021:,} app units built by the end of 2021 (completion date, or Brampton / Caledon permit '
@@ -289,10 +289,10 @@ def sheet_pairs(ws, prs, match):
     ws.title = 'Pair Evidence'
     ws['A1'] = 'Duplicate pairs left open by decision D11, with what the app says'
     ws['A1'].font = X.TITLE
-    ws['A2'] = 'Suggestions only. Planning decides in the yellow column.'
+    ws['A2'] = 'Suggestions from the app evidence, and the decision taken at checkpoint 3 (D16 / D17).'
     ws['A2'].font = X.SUB
     cols = ['Row A', 'Population A', 'App match A', 'Row B', 'Population B', 'App match B', 'Why it was open',
-            'What the app shows', 'Suggestion', 'Planning decision']
+            'What the app shows', 'Suggestion', 'Decision']
     X.header(ws, 4, cols, [9, 11, 36, 9, 11, 36, 26, 40, 40, 26])
 
     def desc(a):
@@ -301,8 +301,12 @@ def sheet_pairs(ws, prs, match):
                 f"{PHASE_LABEL.get(m.get('phase'), '-')}, {m.get('units') or 0:,} units)") if m.get('title') else 'No match'
     for n, p in enumerate(prs, 5):
         a, b = p['v']['a'], p['v']['b']
+        dec = next((x['_excl'] for x in (a, b) if x['_include'] == 'No' and 'D16' in (x['_excl'] or '')), None)
+        dec = (f"Decided: {dec.replace('Duplicate of', 'keep')}, exclude "
+               f"{', '.join(x['id'] for x in (a, b) if x['_include'] == 'No')}" if dec else
+               'Decision D17: both stay in the total, flagged for Planning')
         vals = [a['id'], a['Population'], desc(a), b['id'], b['Population'], desc(b), p['v']['d11'].split(': ', 1)[-1],
-                p['finding'], p['suggest'], None]
+                p['finding'], p['suggest'], dec]
         for c, v in enumerate(vals, 1):
             cell = X.body(ws.cell(n, c, v), X.BOLD if c in (1, 4) else X.BASE, '#,##0' if c in (2, 5) else None,
                           wrap=c in (3, 6, 7, 8, 9))

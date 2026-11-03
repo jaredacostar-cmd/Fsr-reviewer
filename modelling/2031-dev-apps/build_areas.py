@@ -484,7 +484,21 @@ DEFAULTS = {
     'boxes': os.path.join(PRIVATE, 'map_boxes.json'),
     'decisions': os.path.join(PRIVATE, 'decisions.csv'),
     'munis': os.path.join(HERE, '..', '..', 'data', 'munis.json'),
+    'exclusions': os.path.join(PRIVATE, 'exclusions.csv'),
 }
+
+
+def apply_exclusions(apps, path):
+    """Rows Planning decided to leave out at a checkpoint (private/exclusions.csv: row_id, keep, decision)."""
+    if not path or not os.path.exists(path):
+        return
+    by = {a['id']: a for a in apps}
+    for r in csv.DictReader(open(path, newline='', encoding='utf-8')):
+        a = by.get(r['row_id'])
+        if a and a['_include'] == 'Yes':
+            a['_include'] = 'No'
+            a['_excl'] = f"Duplicate of {r['keep']} (decision {r['decision']})"
+
 
 
 def prepare(paths=None):
@@ -500,6 +514,7 @@ def prepare(paths=None):
     _, pairs = find_issues(apps, meta)
     cands = duplicate_candidates(apps, pairs)
     resolve_d11(cands, apps)
+    apply_exclusions(apps, p.get('exclusions'))
     return {'apps': apps, 'labels': labels, 'boxes': boxes, 'decisions': decisions, 'names': names,
             'cands': cands}
 
