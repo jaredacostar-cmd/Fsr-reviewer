@@ -19,7 +19,7 @@ def rings_px(geo):
         if p.geom_type!='Polygon': continue
         out.append(np.array([ll2px(x,y) for x,y in p.exterior.coords]))
     return out
-im=Image.open('hi-1.png').convert('RGB')
+im=Image.open('hi-clean.png').convert('RGB')
 crop=(150,1450,3250,4420); base=np.array(im.crop(crop))
 fig,ax=plt.subplots(figsize=(10,9.9),dpi=200)
 ax.imshow(base,extent=(crop[0],crop[2],crop[3],crop[1]),alpha=0.55)
@@ -41,7 +41,7 @@ for a in R['areas']:
     X0,X1,Y0,Y1=min(xs),max(xs),min(ys),max(ys); cx,cy=(X0+X1)/2,(Y0+Y1)/2
     side=max(X1-X0,Y1-Y0)*1.25+50; X0,Y0=cx-side/2,cy-side/2
     fn=f'tmp_{a["code"]}'
-    subprocess.run(['pdftoppm','-r',str(DPI),'-x',str(int(X0*k)),'-y',str(int(Y0*k)),'-W',str(int(side*k)),'-H',str(int(side*k)),'-png','-singlefile','../pdf/in.pdf',fn],check=True)
+    subprocess.run(['pdftoppm','-r',str(DPI),'-x',str(int(X0*k)),'-y',str(int(Y0*k)),'-W',str(int(side*k)),'-H',str(int(side*k)),'-png','-singlefile','../pdf/in_clean.pdf',fn],check=True)
     img=np.array(Image.open(fn+'.png').convert('RGB')); os.remove(fn+'.png')
     fig,ax=plt.subplots(figsize=(7.2,7.2),dpi=170)
     ax.imshow(img,extent=(X0,X0+side,Y0+side,Y0),alpha=0.5)
