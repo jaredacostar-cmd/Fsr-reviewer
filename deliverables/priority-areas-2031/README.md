@@ -1,33 +1,44 @@
-# Scenario 1 2031 Priority Areas: population analysis
+# Scenario 1 2031 Priority Areas: growth from development applications
 
-The 19 priority areas on the Region map *4507-WW Development Application Modelling Update* (2026-05-20), crossed with
-the developments in this app. Every figure is the app's own: units, residential population and jobs as **growth on
-top of the 2021 Census** (census day 2021-05-11), the base year of the hydraulic models:
+Growth in the 19 priority areas of the Region map *4507-WW Development Application Modelling Update* (Scenario 1 2031,
+2026-05-20), for hydraulic models based on the 2021 Census. Every figure is growth on top of the 2021 Census (census day
+2021-05-11), from planning applications in this app, computed by the app's own modules:
 
-- **Existing (2021–2026)**: built from census day to the app snapshot (2026-10-19): every building permit completed
-  since census day, as in the app's Growth › 2021 existing "+ Built since".
-- **Anticipated 2031 (2021–2031)**: existing 2021–2026 plus the app Forecast's 2026–2031 share of what is left to build.
-- **Build-out (growth since 2021)**: existing 2021–2026 plus everything left to build.
-- **Built before census day** is shown for reference only: it is already in the 2021 Census and is not added.
+| Growth | What it is |
+|---|---|
+| 2021–2026 | Built since census day (every building permit completed since then, as in Growth › 2021 existing) |
+| 2026–2031 | The app Forecast's share of what is left to build, placed in 2026–2031 (Growth › Forecast › By period) |
+| Total to 2031 | The two added |
+| Final growth | Full build-out of the applications |
+
+Each is given in units, residential population (Peel persons per unit) and jobs (floor area on the applications).
+
+## Boundaries
+
+Each area was checked against every boundary the app holds (120 secondary plans, 75 MTSAs, 30 precincts) and each
+application's own parcel (Excel sheet *Boundary review*):
+
+1. **Your direction:** A01 Macville = the Region map's blue applications (ArgoMcville, Bolton North Hill Op 1 and 2,
+   Solmar) plus the two applications in its box. A15 Steeles MTSA = the whole *Steeles at Mississauga (Transit Hub)* MTSA.
+2. **Existing boundary where its size matches the Region's:** A06 McLaughlin Road = Brookvalley (Mayfield West Phase 2)
+   Secondary Plan, 438.1 ha vs 435.7 ha.
+3. **Otherwise, application parcels:** the app's planning applications with at least half their land in the Region box.
+
+Only planning applications with growth since census day count, and each counts in one area.
+
+## Files
 
 | File | What it is |
 |---|---|
-| `Priority_Areas_2031_Population_Analysis.xlsx` | Read Me, Summary (SUMIFS formulas; block A = all developments, block B = planning applications only), Crosswalk (Region map points → app development), Developments (master list), and one sheet per area, A01–A19 |
-| `Priority_Areas_2031_Population_Analysis.pptx` | 27 slides: findings, the Region map (reference), the 19 areas in the app, summary table, Region-vs-app chart, crosswalk, one slide per area built on its app screenshot (slide = 7 + area no.), method |
-| `app-screens/Axx_<name>_app.png` | Screenshots of the app, one per area (plus `A00_all_areas_app.png`): the full map with the area drawn as the app's own selection, every development in it selected, each planning application labelled with its number, and the app's selection panel open |
-| `maps/A00_overview.png`, `maps/Axx_<name>.png` | Reference: the Region PDF map, with the app's developments plotted on it and numbered the same way |
-| `priority_areas_2031.geojson` | The area boxes, the developments and the Region map points, for GIS (WGS84) |
-| `scripts/` | How the figures were produced, so they can be re-run on a newer snapshot |
+| `Priority_Areas_2031_Growth_Analysis.xlsx` | Read Me, Summary (formulas), Boundary review, Crosswalk (Region map points → applications), Developments, and one sheet per area, A01–A19 |
+| `Priority_Areas_2031_Growth_Analysis.pptx` | 31 slides on the Peel template; area slides are 11–29 (slide = 10 + area no.), each built on its app screenshot |
+| `app-screens/Axx_<name>_app.png` | The app's full map with the boundary drawn as its own selection and each application labelled; `A00_all_areas_app.png` shows all 19 |
+| `maps/Axx_<name>.png` | Reference: the Region PDF map with the boundary used, numbered the same way |
+| `priority_areas_2031.geojson` | Boundaries, Region boxes, applications and Region map points (WGS84) |
+| `scripts/` | How the figures, screenshots, workbook and deck were produced |
 
-**Cross-references.** Area `A08` = Excel sheet `A08` = PPT slide 15 = `app-screens/A08_SP47_app.png` (Region map
-reference: `maps/A08_SP47.png`). Development `A08-012` is label 12 in both images and appears on that sheet and in sheet
-`Developments`. The screenshots were taken offline, so they show the app's own layers without basemap tiles; the app's
-panel in them gives the developments' full size, pre-2021 included.
+**Cross-references.** Area `A08` = Excel sheet `A08` = PPT slide 18 = `app-screens/A08_SP47_app.png` =
+`maps/A08_SP47.png`. Development `A08-012` is label 12 in both images.
 
-**How the figures were produced.** `scripts/extract.js` loads the app headless with Playwright, using the published
-`data/`, and reads each development's figures from the app's modules: `PeelDemand.estimate`, `PeelPhases.unbuiltOf`,
-`PeelLedger.rows` with the `PeelTiming` forecast, `PeelAreas.growthSince` (built since census day) and `PeelEmployment`. `geo.py` georeferences the PDF by fitting its
-municipal boundary to `data/munis.json`. `compute.py` assigns developments to the boxes. The workbook's Read Me gives
-the definitions and caveats.
-
-Unofficial screening estimate from public data. Not the Region's capacity ledger.
+The screenshots were taken offline: they show the app's own layers without basemap tiles. Unofficial screening estimate
+from public data, not the Region's capacity ledger.

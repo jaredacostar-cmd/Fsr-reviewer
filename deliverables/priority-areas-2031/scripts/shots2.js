@@ -5,7 +5,8 @@ const fs = require('fs');
 const { chromium } = require('playwright');
 const ROOT = '/home/user/Fsr-reviewer';
 const serve = require(ROOT + '/tests/browser/serve.js');
-const R = require('./results.json');
+const R = require('./results2.json');
+const ringsOf = g => (g.type === 'Polygon' ? [g.coordinates] : g.coordinates).map(p => p[0]);
 const OUT = ROOT + '/deliverables/priority-areas-2031/app-screens';
 const only = process.argv[2];
 fs.mkdirSync(OUT, { recursive: true });
@@ -30,12 +31,12 @@ const slug = n => n.replace(/\//g, '-').replace(/ /g, '_');
   await page.addStyleTag({ content: '.info-card{display:none!important}' });
   for (const a of R.areas) {
     if (only && a.code !== only) continue;
-    const rows = a.rows.map(r => ({ key: r.key, n: r.kind === 'Planning application' ? String(+r.id.split('-')[1]) : null, lat: r.lat, lng: r.lng }));
-    const info = await page.evaluate(({ ring, rows, title }) => {
+    const rows = a.rows.map(r => ({ key: r.key, n: String(+r.id.split('-')[1]), lat: r.lat, lng: r.lng }));
+    const info = await page.evaluate(({ rings, rows, title }) => {
       const AS = PeelAreaSelect, M = PeelMapCore.map, st = PeelApp.state;
       const byKey = new Map(st.projects.map(p => [p.key, p]));
       AS.clearSelection();
-      AS.selAreas = [ring];
+      AS.selAreas = rings;
       let n = 0;
       for (const r of rows) { const p = byKey.get(r.key); if (p) { AS.selection.set(p.key, p); n++; } }
       AS.drawSelection();
@@ -45,11 +46,11 @@ const slug = n => n.replace(/\//g, '-').replace(/ /g, '_');
         .bindTooltip(r.n, { permanent: true, direction: 'right', offset: [6, 0], className: 'area-lbl' }).addTo(window._lbl);
       if (!document.getElementById('area-lbl-css')) { const s = document.createElement('style'); s.id = 'area-lbl-css'; s.textContent = '.area-lbl{font:700 11px/1 Arial;padding:1px 3px;background:rgba(255,255,255,.9);border:1px solid #7a0000;color:#111;box-shadow:none}.area-lbl:before{display:none}'; document.head.appendChild(s); }
       PeelMeasure.openSelectionResult(title, n);
-      const b = L.latLngBounds(ring.map(([x, y]) => [y, x]));
+      const b = L.latLngBounds(rings.flat().map(([x, y]) => [y, x]));
       M.invalidateSize();
       M.fitBounds(b, { padding: [60, 60] });
       return { n };
-    }, { ring: a.ring, rows, title: `${a.code} · ${a.name}` });
+    }, { rings: ringsOf(a.boundary), rows, title: `${a.code} · ${a.name}` });
     await page.mouse.move(3, 3);
     await page.waitForTimeout(3500);
     const f = `${OUT}/${a.code}_${slug(a.name)}_app.png`;
@@ -62,16 +63,16 @@ const slug = n => n.replace(/\//g, '-').replace(/ /g, '_');
       const byKey = new Map(st.projects.map(p => [p.key, p]));
       AS.clearSelection(); if (window._lbl) window._lbl.remove();
       window._lbl = L.layerGroup().addTo(M);
-      AS.selAreas = areas.map(a => a.ring);
+      AS.selAreas = areas.flatMap(a => a.rings);
       let n = 0;
       for (const a of areas) { for (const k of a.keys) { const p = byKey.get(k); if (p) { AS.selection.set(p.key, p); n++; } }
-        const c = L.latLngBounds(a.ring.map(([x, y]) => [y, x])).getNorthEast();
+        const c = L.latLngBounds(a.rings.flat().map(([x, y]) => [y, x])).getNorthEast();
         L.marker(c, { opacity: 0, interactive: false, icon: L.divIcon({ className: '', html: '' }) }).bindTooltip(a.code, { permanent: true, direction: 'right', className: 'area-lbl' }).addTo(window._lbl); }
       AS.drawSelection();
       PeelMeasure.openSelectionResult('19 priority areas (A01–A19)', n);
       M.invalidateSize();
-      M.fitBounds(L.latLngBounds(areas.flatMap(a => a.ring.map(([x, y]) => [y, x]))), { padding: [30, 30] });
-    }, { areas: R.areas.map(a => ({ code: a.code, ring: a.ring, keys: a.rows.map(r => r.key) })) });
+      M.fitBounds(L.latLngBounds(areas.flatMap(a => a.rings.flat().map(([x, y]) => [y, x]))), { padding: [30, 30] });
+    }, { areas: R.areas.map(a => ({ code: a.code, rings: ringsOf(a.boundary), keys: a.rows.map(r => r.key) })) });
     await page.mouse.move(3, 3);
     await page.waitForTimeout(4000);
     await page.screenshot({ path: `${OUT}/A00_all_areas_app.png` });
