@@ -47,7 +47,17 @@ test('the gap is against CMHC, within ±10% or not; no CMHC figure, no gap', () 
   assert.equal(get('Caledon', 2021).gap, null, 'CMHC 0: no gap'); assert.equal(get('Caledon', 2022).cmhc, null);
   const t = R.totals(res).find(x => x.m === 'Mississauga');
   assert.deepEqual([t.all, t.cmhc, t.yearsWithin, t.years], [145, 150, 1, 2]);
-  assert.match(R.markdown(res), /\| 2021 \| 60 \| 45 \| \*\*105\*\* \| 100 \| \+5% ✓/);
+  assert.match(R.markdown(res), /\| 2021 \| 60 \| 45 \| \*\*105\*\* \| 100 \| \+5% \|/, 'Mississauga: its years carry no mark, its windows do');
+});
+
+test('Mississauga is held to two-year windows and its five-year total; the others to each year (decision 14)', () => {
+  assert.deepEqual(R.TARGET, { Mississauga: 'two-year', Brampton: 'year', Caledon: 'year', Peel: 'year' });
+  const res = R.reconcile(projects, cmhc, deps);
+  const [w] = R.windows(res, 'Mississauga');
+  assert.deepEqual([w.from, w.to, w.all, w.cmhc, w.within], [2021, 2022, 145, 150, true], '−20% in 2022 alone, −3% over the window');
+  assert.equal(R.meets(res, 'Mississauga'), true);
+  assert.equal(R.meets(res, 'Brampton'), false, 'Brampton: each year');
+  assert.match(R.markdown(res), /\| 2021–22 \| \*\*145\*\* \| 150 \| -3% ✓ \|/);
 });
 
 test('the charter: calibration years 2021–2025, tolerance ±10%', () => {
@@ -99,4 +109,14 @@ test('dating rules for a building filed in stages; other permits keep their date
   assert.deepEqual([y('B', 0, done), y('B', 0, open)], ['2021-01', '2022-05'], 'B: last stage closure');
   assert.deepEqual([y('C', 24, done), y('C', 24, open), y('C', 24, noFull)], ['2024-03', '2024-05', '2025-12'], 'C: final, else last stage + lag');
   for (const rule of ['A', 'B', 'C']) assert.equal(y(rule, 12, house), '2023-02', `${rule}: a permit not filed in stages keeps its date`);
+});
+
+test('the app dates a building filed in stages by rule C (decision 13)', () => {
+  const A = require('../js/areas.js');
+  const [done] = P.dedupeRecords([raw('BP 3NEW 1-1 CON', [ev('2020-01-01', 'permit'), ev('2021-01-01', 'completed')], 300), raw('BP 3NEW 1-1', [ev('2021-06-01', 'permit'), ev('2024-03-01', 'completed')])]);
+  const [noFinal] = P.dedupeRecords([raw('BP 3NEW 2-2 CON', [ev('2020-01-01', 'permit'), ev('2022-05-15', 'completed')], 300), raw('BP 3NEW 2-2', [ev('2022-01-01', 'permit')])]);
+  const house = raw('BP 9NEW 22-5075', [ev('2022-01-01', 'permit'), ev('2023-02-01', 'completed')], 1);
+  const at = r => { const c = A.completedAt(r); return `${new Date(c.date).toISOString().slice(0, 7)}${c.estimated ? ' est' : ''}`; };
+  assert.deepEqual([at(done), at(noFinal), at(house)], ['2024-03', '2024-05 est', '2023-02']);
+  for (const r of [done, noFinal, house]) assert.deepEqual(A.completedAt(r), R.datingRule('C', 24)(r), 'the app and the reconciliation agree');
 });

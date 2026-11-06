@@ -25,8 +25,8 @@ completions, so completions have to be right first.
 | # | Bucket | Status |
 |---|---|---|
 | 1 | Baseline and definitions: CMHC's definition, reconciliation report, no app changes | Done (checkpoint 1, 2026-11-06) |
-| 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | **At checkpoint 2** |
-| 3 | Brampton undercount: units on permits that state none, issue→completion lag, permit coverage | – |
+| 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | Done: rule C applied (checkpoint 2b) |
+| 3 | Brampton undercount (and Caledon, if confirmed) | **Plan awaiting confirmation** |
 | 4 | Remaining gaps, reviewed case by case | – |
 | 5 | In the app: application + other = all, CMHC beside it, flag when over 10% | – |
 | 6 | Forecast on the calibrated completion pace (2031 / 2041 / 2051) | – |
@@ -153,3 +153,56 @@ Mississauga under each rule (units, gap against CMHC):
   units, and only 2–5 such towers finish in a year, so one tower is 10–35% of the year. If a tower's
   date falls on the wrong side of December 31, that year misses ±10%, whatever the rule.
 - **Two-year windows under C:** 2021–22 −6%, 2022–23 −26%, 2023–24 −14%, 2024–25 −1%.
+
+### Checkpoint 2 decisions (owner, 2026-11-06)
+
+| # | Decision |
+|---|---|
+| 13 | **Rule C** dates a building filed in stages: its final sign-off; with none yet, its last stage closure + 24 months. |
+| 14 | **Match target, Mississauga:** within ~10% over **two-year windows** (2021–22, 2022–23, 2023–24, 2024–25), plus the five-year total. Brampton and Caledon stay per year. This revises decision 2 for Mississauga only: its completions come in towers too large for single years to match. |
+| 15 | Rule C is applied in the app (`js/areas.js completedAt`), with what else moves shown at the checkpoint. |
+
+### Rule C applied in the app (2026-11-06)
+
+`js/areas.js completedAt`: a building filed in stages is complete at its final sign-off; with none
+yet, at its last stage closure + 24 months, marked estimated.
+
+2021–2025 against CMHC, after the change:
+
+| | All | CMHC | Gap | Target |
+|---|---|---|---|---|
+| Mississauga | 12,468 | 13,974 | −11% | two-year windows: 2021–22 −6% ✓, 2022–23 −26% ✗, 2023–24 −14% ✗, 2024–25 −1% ✓ → not met |
+| Brampton | 5,405 | 9,407 | −43% | 1 of 5 years → not met |
+| Caledon | 1,889 | 2,667 | −29% | 0 of 5 years → not met |
+| Peel | 19,762 | 26,048 | −24% | 1 of 5 years |
+
+What else moved in the app:
+- **Completions per year** (Growth › Pipeline with years selected, the per-year strip, the
+  by-municipality table) moved in **Mississauga only**. Application developments, before → after:
+  2021 1,516 → 2,194; 2022 1,048 → 747; 2023 2,694 → 1,514; 2024 4,228 → 2,713; 2025 6,253 → 3,334;
+  2026 4,976 → 5,090.
+- **Unchanged:** built since the 2021 census, the Built and Existing layers, the Completed /
+  Permitted / Left to build tiles, Brampton and Caledon. Every staged tower lands after census day
+  under either dating, and the tiles do not use dates.
+- **Open item, not changed:** 17 Mississauga towers (5,801 units) have a full permit still open,
+  so rule C dates them after today. Their merged status is still "completed", so the tiles and the
+  Built layer count them as built. Settle this in Bucket 4 or 5.
+- **Outside the calibration years:** Mississauga 2026 to date is 3,379 units at final sign-off plus
+  1,816 estimated, while CMHC has 77 for January–June. Some final sign-offs come well after people
+  move in.
+
+### Bucket 3 findings (before the plan)
+
+Units on building permits issued, the app against the Region of Peel's permit statistics:
+
+| | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|---|---|
+| Brampton, app | 2,104 | 1,465 | 1,691 | 945 | 778 | 758 | 690 |
+| Brampton, Region | 5,424 | 5,983 | 8,786 | 6,984 | 6,307 | 5,523 | 4,602 |
+| Caledon, app | 377 | 358 | 936 | 968 | 321 | 911 | 264 |
+| Caledon, Region | 403 | 434 | 1,110 | 1,498 | 568 | 853 | 357 |
+| Mississauga, app | 3,580 | 1,903 | 4,930 | 5,864 | 2,896 | 1,833 | 1,297 |
+| Mississauga, Region | 3,747 | 2,352 | 4,945 | 6,235 | 3,626 | 1,371 | 1,734 |
+
+Brampton's permits carry 15–25% of the units the Region reports: a **coverage** gap, not mainly a
+dating one. Caledon's and Mississauga's permits are close to the Region's.

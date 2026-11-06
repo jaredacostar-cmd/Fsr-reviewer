@@ -26,7 +26,10 @@ const A = require('../js/areas.js');
 
 const MUNIS = ['Mississauga', 'Brampton', 'Caledon'];
 const YEARS = [2021, 2022, 2023, 2024, 2025];   // calibration years (charter decision 4)
-const TOLERANCE = 0.10;                           // charter decision 2: within ~10%, each municipality, each year
+const TOLERANCE = 0.10;                           // charter decision 2: within ~10%
+// How each municipality is held to it: each year (decision 2), or, for Mississauga, two-year windows
+// and the five-year total (decision 14: its completions come in towers too large for single years).
+const TARGET = { Mississauga: 'two-year', Brampton: 'year', Caledon: 'year', Peel: 'year' };
 
 const isSuite = r => P.permitRole(r) === 'suite';
 
@@ -76,6 +79,22 @@ function row(m, year, r, cmhc) {
   return { m, year, ...r, cmhc: c, gap, within: gap != null && Math.abs(gap) <= TOLERANCE };
 }
 
+// Two-year windows (2021–22, 2022–23…), per municipality: { m, from, to, all, cmhc, gap, within }.
+function windows(res, m) {
+  const rows = res.rows.filter(r => r.m === m), out = [];
+  for (let i = 0; i + 1 < rows.length; i++) {
+    const a = rows[i], b = rows[i + 1], all = a.all + b.all, c = (a.cmhc || 0) + (b.cmhc || 0);
+    const gap = c ? (all - c) / c : null;
+    out.push({ m, from: a.year, to: b.year, all, cmhc: c, gap, within: gap != null && Math.abs(gap) <= TOLERANCE });
+  }
+  return out;
+}
+// Whether a municipality meets its target: every year, or every two-year window and the total.
+function meets(res, m) {
+  const t = totals(res).find(x => x.m === m);
+  return TARGET[m] === 'two-year' ? windows(res, m).every(w => w.within) && Math.abs(t.gap) <= TOLERANCE : res.rows.filter(r => r.m === m).every(r => r.within);
+}
+
 // Totals over the years, per municipality.
 function totals(res) {
   const out = {};
@@ -95,10 +114,17 @@ function markdown(res) {
   const out = [];
   for (const m of [...MUNIS, 'Peel']) {
     out.push(`\n### ${m}\n`, '| Year | App (applications) | Other | **All** | CMHC | Gap | Suites (not in All) | Estimated dates in All |', '|---|---|---|---|---|---|---|---|');
-    for (const r of res.rows.filter(x => x.m === m)) out.push(`| ${r.year} | ${n(r.app)} | ${n(r.other)} | **${n(r.all)}** | ${r.cmhc == null ? '–' : n(r.cmhc)} | ${pc(r.gap)}${mark(r)} | ${n(r.suites)} | ${n(r.est)} |`);
+    for (const r of res.rows.filter(x => x.m === m)) out.push(`| ${r.year} | ${n(r.app)} | ${n(r.other)} | **${n(r.all)}** | ${r.cmhc == null ? '–' : n(r.cmhc)} | ${TARGET[m] === 'two-year' ? pc(r.gap) : pc(r.gap) + mark(r)} | ${n(r.suites)} | ${n(r.est)} |`);
+    if (TARGET[m] === 'two-year') {
+      out.push('', `Held to two-year windows (decision 14):`, '', '| Window | **All** | CMHC | Gap |', '|---|---|---|---|');
+      for (const w of windows(res, m)) out.push(`| ${w.from}–${String(w.to).slice(2)} | **${n(w.all)}** | ${n(w.cmhc)} | ${pc(w.gap)}${mark(w)} |`);
+    }
   }
-  out.push(`\n### ${res.years[0]}–${res.years[res.years.length - 1]} totals\n`, '| | App | Other | **All** | CMHC | Gap | Years within ±10% | Suites (not in All) |', '|---|---|---|---|---|---|---|---|');
-  for (const t of totals(res)) out.push(`| ${t.m} | ${n(t.app)} | ${n(t.other)} | **${n(t.all)}** | ${n(t.cmhc)} | ${pc(t.gap)} | ${t.yearsWithin} of ${t.years} | ${n(t.suites)} |`);
+  out.push(`\n### ${res.years[0]}–${res.years[res.years.length - 1]} totals\n`, '| | App | Other | **All** | CMHC | Gap | Within ±10% | Target met | Suites (not in All) |', '|---|---|---|---|---|---|---|---|---|');
+  for (const t of totals(res)) {
+    const w = windows(res, t.m), within = TARGET[t.m] === 'two-year' ? `${w.filter(x => x.within).length} of ${w.length} two-year windows` : `${t.yearsWithin} of ${t.years} years`;
+    out.push(`| ${t.m} | ${n(t.app)} | ${n(t.other)} | **${n(t.all)}** | ${n(t.cmhc)} | ${pc(t.gap)} | ${within} | ${meets(res, t.m) ? 'yes' : 'no'} | ${n(t.suites)} |`);
+  }
   return out.join('\n');
 }
 
@@ -120,11 +146,11 @@ function staged(r) {
 function datingRule(rule, months = 0, base = A.completedAt) {
   return r => {
     const s = staged(r); if (!s) return base(r);
-    let d = null;
+    let d = null, estimated = false;
     if (rule === 'A') d = s.final != null ? s.final - months * MONTH : s.fullOpen ? null : s.stage;
     else if (rule === 'B') d = s.stage != null ? s.stage : s.final;
-    else if (rule === 'C') d = s.final != null ? s.final : s.stage != null ? s.stage + months * MONTH : null;
-    return d == null ? null : { date: d, estimated: false };
+    else if (rule === 'C') { d = s.final != null ? s.final : s.stage != null ? s.stage + months * MONTH : null; estimated = s.final == null || !!r.completedEstimated; }
+    return d == null ? null : { date: d, estimated };
   };
 }
 // The one number of a rule (0–36 months) that brings a municipality's years closest to CMHC's
@@ -154,7 +180,7 @@ if (require.main === module && process.argv.includes('--rules')) {
   const cur = reconcile(projects, cm, o);
   const out = ['| Mississauga | 2021 | 2022 | 2023 | 2024 | 2025 | 2021–2025 | Years ±10% |', '|---|---|---|---|---|---|---|---|',
     `| CMHC | ${YEARS.map(y => n(cm.Mississauga[y].completions.all)).join(' | ')} | **${n(YEARS.reduce((t, y) => t + cm.Mississauga[y].completions.all, 0))}** | |`,
-    line('Today (latest date)', cur)];
+    line('App (rule C, 24 mo)', cur)];
   for (const rule of ['A', 'B', 'C']) {
     const b = fitRule(projects, cm, rule, 'Mississauga', o);
     out.push(line(`${rule}${rule === 'B' ? '' : ` (${b.months} mo)`}`, b.res));
@@ -170,4 +196,4 @@ if (require.main === module && process.argv.includes('--rules')) {
   else console.log(`Completions: the app's building permits against CMHC (Region of Peel open data, edited ${housing.activity.edited}).\n${markdown(res)}`);
 }
 
-module.exports = { reconcile, totals, markdown, datingRule, fitRule, staged, MUNIS, YEARS, TOLERANCE };
+module.exports = { reconcile, totals, windows, meets, markdown, datingRule, fitRule, staged, MUNIS, YEARS, TOLERANCE, TARGET };

@@ -100,9 +100,21 @@
 
   // Completion date of a permit: the recorded one, else estimated from the issue date (Brampton
   // and Caledon publish no completion date): 12 months for houses, 30 for buildings of 20+ units.
+  // A building filed in stages: below.
   const MONTH = 30.44 * 864e5;
   const PROPOSED_PHASES = new Set(['inception', 'review']);
+  // A building filed in stages (Mississauga: conditional permits CON, CR1, CR2… then the full permit;
+  // js/phases.js permitPart) is complete at its full permit's final sign-off; with none yet, at its last
+  // stage closure + 24 months, estimated (rule C, owner 2026-11-06: docs/completions-calibration.md,
+  // decision 13). A stage closure alone is not the building: it closes when the next stage replaces it.
+  const STAGED_LAG_MONTHS = 24;
   function completedAt(r) {
+    if (r.events.some(e => e.part === 'stage')) {
+      const fin = r.events.filter(e => e.phase === 'completed' && e.part !== 'stage').map(e => +e.date);
+      if (fin.length) return { date: Math.min(...fin), estimated: !!r.completedEstimated };
+      const stg = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
+      if (stg.length) return { date: Math.max(...stg) + STAGED_LAG_MONTHS * MONTH, estimated: true };
+    }
     const done = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
     if (done.length) return { date: Math.max(...done), estimated: !!r.completedEstimated };
     const issued = r.events.filter(e => e.phase === 'permit').map(e => +e.date);
