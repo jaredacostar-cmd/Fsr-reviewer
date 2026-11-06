@@ -131,3 +131,12 @@ test('dwelling types as CMHC counts them: back-to-back a row, stacked an apartme
   assert.equal(t('RESIDENTIAL', 'NEW (36) STOREY RESIDENTIAL BLDG w/ (7) LEVELS OF U/G PARKING GARAGE', 430), 'apartment');
   assert.equal(t('RESIDENTIAL', 'RESIDENTIAL', 2), 'other');
 });
+
+test('completions per year count the homes inferred on permits that state no units, in their years (fix B1)', () => {
+  const G = require('../js/growth.js');
+  const blank = (ref, y) => ({ kind: 'permit', phase: 'completed', ref, units: null, type: 'C: Apartments - Condominium', description: 'New Complete Building', y, events: [] });
+  const p = { key: 'b', municipality: 'Brampton', phase: 'completed', buildout: { inferred: { units: 300, completed: 300 } }, records: [blank('21-1', 2023), blank('21-2', 2024), { kind: 'permit', phase: 'completed', ref: '21-3', units: 10, type: 'Townhouse', description: 'New', y: 2024, events: [] }] };
+  assert.equal(P.isBlankPermit(p.records[0]), true);
+  const s = G.completionStats([p], { completedAt: r => ({ date: Date.UTC(r.y, 5, 1), estimated: true }), permitUnits: rs => rs.reduce((t, r) => t + (r.units || 0), 0) });
+  assert.deepEqual(s.years.map(y => [y.year, y.units]), [[2023, 150], [2024, 160]], 'the 300 inferred homes over the two blank permits, with the 10 stated');
+});

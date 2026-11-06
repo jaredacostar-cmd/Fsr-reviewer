@@ -243,3 +243,48 @@ apartments 176 vs 73, unclassed 325 (builders' model homes named only by model: 
   with a new house is one CMHC counts.
   - **Fix C2, the owner's call:** count "(BB)" basement apartments in All.
 - **Data error:** a few garage and deck permits carry unit counts.
+
+### Checkpoint 3 decisions (owner, 2026-11-06)
+
+| # | Decision |
+|---|---|
+| 18 | **Fix B1 applied:** completions per year count the homes inferred on Brampton's permits that state no units. |
+| 19 | **Fix C2 skipped:** Caledon's "(BB)" basement apartments stay out of All. The tag's meaning is unconfirmed. |
+| 20 | **Fix C1, fitted:** a Caledon house permit still "Issued" is built N months after issue. N is fitted to CMHC. |
+
+### Fix B1 applied (2026-11-06)
+
+`js/growth.js completionStats`: a development's inferred completed homes are spread evenly over its
+completed permits that state no units, in their years, as "built since the census" already does
+(`js/areas.js builtSince`).
+- **Brampton 2021–2025:** 5,405 → **7,773** against CMHC 9,407 (−43% → −17%). Years: 1,761 (+10%) ·
+  2,093 (−7%) ✓ · 1,289 (−63%) · 1,483 (+15%) · 1,147 (+52%).
+- **Single years still swing** because Brampton's apartment completions are dated issue + 30 months,
+  an estimate. CMHC's 2023 alone has 2,145 apartments.
+- **What moved:** Brampton's completions per year only. Built since the census and the tiles already
+  counted the inferred homes.
+
+### Fix C1: fitted, held for the owner's review (not committed)
+
+`js/phases.js closeOpenCaledonHouses`: a Caledon house permit (fewer than 20 units, homes not suites)
+still "Issued" N months after first issue is taken as built then, estimated. The date is kept on the
+permit, not added as an event, so the forecast curves (Timing learns from dated completions only)
+never learn from it.
+
+Caledon, 2021–2025, by N (each year's gap; ✓ within 10%):
+
+| N | 2021 | 2022 | 2023 | 2024 | 2025 | Total |
+|---|---|---|---|---|---|---|
+| 12 | −31% | +46% | +13% | −28% | +154% | 3,374 (+27%) |
+| 18 | −36% | +18% | +9% ✓ | +7% ✓ | +99% | 3,088 (+16%) |
+| **24 (best)** | −44% | −7% ✓ | +31% | −3% ✓ | +75% | **2,958 (+11%)** |
+| 30 | −42% | −11% | +10% | −11% | +116% | 2,870 (+8%) |
+| 36 | −29% | −16% | −9% ✓ | +34% | +104% | 2,880 (+8%) |
+
+What else C1 moves, because those houses become built across the app:
+- **Caledon built since the 2021 census:** 3,019 → 4,154.
+- **Built layer:** 636 more Caledon developments.
+- **DC servicing gate (`data/dc-gate.json`):** 768 Caledon developments leave it. Built houses no
+  longer wait on servicing.
+- **Development keys:** 3 Caledon developments get new keys. A key comes partly from its files'
+  stages.

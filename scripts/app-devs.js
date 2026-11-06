@@ -18,7 +18,8 @@ const { countUnitsFromText } = require('./build-snapshot-index.js');
 /**
  * @param {object} snap      data/snapshot.json
  * @param {object} [opts]    tree: data/tree-counts.json, council: data/council-decisions.json
- *   (either missing: the app's fallback, today's grouping or no decisions)
+ *   (either missing: the app's fallback, today's grouping or no decisions); build: options for
+ *   P.buildProjects (e.g. openHouseMonths, to fit it: scripts/cmhc-reconcile.js)
  * @returns {{ projects, records, tree, byKey }}
  */
 function buildAppDevs(snap, opts = {}) {
@@ -30,15 +31,15 @@ function buildAppDevs(snap, opts = {}) {
   const tree = opts.tree || null;
   TG.setData(tree); TC.setData(tree);
   const grouped = !!(tree && TG.ready());
-  const projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
+  const projects = P.buildProjects(records, { ...(opts.build || {}), ...(grouped ? { regroup: parts => TG.regroup(parts) } : {}) });
   if (tree) TC.apply(projects, { mode: 'tree', data: tree, ringsArea: P.ringsArea });
   return { projects, records, tree, byKey: new Map(projects.map(p => [p.key, p])) };
 }
 
 /** The same, reading the files from a data directory. */
-function loadAppDevs(dataDir) {
+function loadAppDevs(dataDir, build) {
   const read = f => { const p = path.join(dataDir, f); return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : null; };
-  return buildAppDevs(read('snapshot.json'), { tree: read('tree-counts.json'), council: read('council-decisions.json') });
+  return buildAppDevs(read('snapshot.json'), { tree: read('tree-counts.json'), council: read('council-decisions.json'), build });
 }
 
 module.exports = { buildAppDevs, loadAppDevs };

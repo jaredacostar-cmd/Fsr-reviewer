@@ -105,9 +105,19 @@
         if (!byYear.has(y)) byYear.set(y, []);
         byYear.get(y).push(r);
       }
+      // Homes on building permits that state no units (Brampton's apartments), inferred from the
+      // development's planning file (js/phases.js inferBlankPermits): its completed share spread evenly
+      // over the completed blank permits, in their years, as builtSince does (js/areas.js; completions
+      // calibration, fix B1: docs/completions-calibration.md).
+      const inferred = new Map();
+      const inf = p.buildout && p.buildout.inferred;
+      if (inf && inf.completed > 0 && P && P.isBlankPermit) {
+        const blank = done.filter(([r]) => P.isBlankPermit(r));
+        for (const [, y] of blank) { inferred.set(y, (inferred.get(y) || 0) + inf.completed / blank.length); if (!byYear.has(y)) byYear.set(y, []); }
+      }
       for (const [y, rs] of byYear) {
         if (y < lo || y > hi) continue;
-        const units = permitUnits(rs) || 0;
+        const units = (rs.length ? permitUnits(rs) || 0 : 0) + (inferred.get(y) || 0);
         let yy = years.get(y);
         if (!yy) { yy = { year: y, units: 0, projects: new Set() }; years.set(y, yy); }
         yy.units += units; yy.projects.add(p.key);
