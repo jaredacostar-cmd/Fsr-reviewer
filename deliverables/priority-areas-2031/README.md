@@ -34,6 +34,8 @@ Only planning applications with growth since census day count, and each counts i
 | `Priority_Areas_2031_Growth_Analysis.pptx` | 31 slides on the Peel template; area slides are 11–29 (slide = 10 + area no.), each built on its app screenshot |
 | `app-screens/Axx_<name>_app.png` | The app's full map with the boundary drawn as its own selection and each application labelled; `A00_all_areas_app.png` shows all 19 |
 | `maps/Axx_<name>.png` | Reference: the Region PDF map with the boundary used, numbered the same way |
+| `gis/PriorityArea_Boxes.shp` | The 19 red boxes as a shapefile (NAD83 / UTM 17N, EPSG:26917), in the Region map's orientation. All are as drawn on the Region map except A01 Macville, enlarged to enclose all its developments (`RESIZED` = Y). Attributes: growth for every horizon (units `U_`, people `P_`, jobs `J_`: `2126`, `2631`, `TO2031`, `FINAL`), application count, boundary rule, PPT slide and Excel sheet |
+| `gis/PriorityArea_Boxes_Fitted.shp` | The same boxes, each enlarged just enough to enclose all the land counted for its area (applications count when at least half their parcel is in the box, so parcels can spill over the Region box) |
 | `priority_areas_2031.geojson` | Boundaries, Region boxes, applications and Region map points (WGS84) |
 | `scripts/` | How the figures, screenshots, workbook and deck were produced |
 
