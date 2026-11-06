@@ -1815,6 +1815,21 @@
     return p.phase === 'completed' ? 0 : p.units;
   }
 
+  // Which part of a permit a row is (completions calibration, bucket 2: docs/completions-calibration.md).
+  // Mississauga files a high-rise in stages under one number: a conditional permit (CON, usually the
+  // foundation, the row that carries the units), its stages (CR1, CR2…, FTR, FDN, SUP), each
+  // "completed" when the next replaces it, and the full permit (no suffix, or COM), whose completion
+  // is the final sign-off. 'stage' or 'final'; every other permit is 'final'.
+  const STAGE_SUFFIX = /^(CON|FTR|FDN|CR\d*|SUP)$/;
+  function permitPart(ref) {
+    const t = String(ref || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+    return t.length > 2 && STAGE_SUFFIX.test(t[t.length - 1]) ? 'stage' : 'final';
+  }
+  // A permit's events carry the part of the permit they belong to (e.part), so the stages of one
+  // building stay told apart once its rows are merged (a full permit issued and not yet signed off is
+  // a building still under way). Copies: the source events stay as loaded.
+  const partEvents = r => (r.kind !== 'permit' ? r.events.slice() : (() => { const part = permitPart(r.ref); return r.events.map(e => ({ ...e, part })); })());
+
   // The same file can come from two layers (e.g. "all permits" and "growth" permits):
   // merge by municipality + kind + file (fileId: a Caledon number with its type), keeping the furthest phase.
   function dedupeRecords(records) {
@@ -1825,9 +1840,13 @@
       const k = `${r.municipality}|${r.kind}|${fk}`;
       const prev = byRef.get(k);
       // Copy the first record so repeated rebuilds don't merge into the source data again.
-      if (!prev) { const c = { ...r, events: r.events.slice() }; byRef.set(k, c); out.push(c); continue; }
-      const seen = new Set(prev.events.map(e => `${e.phase}|${+e.date}`));
-      for (const e of r.events) if (!seen.has(`${e.phase}|${+e.date}`)) prev.events.push(e);
+      if (!prev) { const c = { ...r, events: partEvents(r) }; byRef.set(k, c); out.push(c); continue; }
+      const seen = new Map(prev.events.map(e => [`${e.phase}|${+e.date}`, e]));
+      for (const e of partEvents(r)) {
+        const same = seen.get(`${e.phase}|${+e.date}`);
+        if (!same) prev.events.push(e);
+        else if (e.part === 'final' && same.part === 'stage') same.part = 'final';   // (a stage closed the day of the final sign-off: the final)
+      }
       prev.events.sort((a, b) => a.date - b.date);
       if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[prev.phase].rank)) {
         if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
@@ -1850,6 +1869,7 @@
   }
 
   const api = {
+    permitPart,
     isSecondUnitConversion, holdSecondUnits, secondUnitSite, isCondoConversion, isRegisteredCondo,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,

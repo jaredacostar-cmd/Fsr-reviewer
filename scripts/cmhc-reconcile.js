@@ -5,12 +5,15 @@
 //
 // The app's count is Growth › Pipeline's (js/growth.js completionStats: completed building permits,
 // dated by js/areas.js completedAt, revised permits of one building counted once a year), over the
-// developments as the app builds them (scripts/app-devs.js). It splits in two, which add up:
+// developments as the app builds them (scripts/app-devs.js). `all` is CMHC's definition: suites
+// added to an existing house are left out (decision 8: CMHC counts new structures only). It splits
+// in two, which add up:
 //   app    the developments with a planning application (what the Completed tile counts)
 //   other  every other development (permit-only sites: single lots, infill)
-// and two diagnostic columns, parts of `all` (not a split of it):
-//   suites the units on permits that add a suite to an existing house (P.permitRole 'suite')
-//   est    the units whose completion date is estimated from the issue date (Brampton, Caledon)
+// and, beside it:
+//   suites the units on permits that add a suite to an existing house (P.permitRole 'suite'): a
+//          line of their own, not in `all`, so the forecast does not lose them
+//   est    the units in `all` whose completion date is estimated from the issue date (Brampton, Caledon)
 // CMHC: the Starts and Completions Survey as the Region of Peel publishes it
 // (data/peel-housing.json activity), all dwelling types.
 //
@@ -51,10 +54,11 @@ function reconcile(projects, cmhc, o = {}) {
   for (const m of MUNIS) {
     const inM = projects.filter(p => p.municipality === m);
     const app = inM.filter(p => (p.kinds || []).includes('application')), other = inM.filter(p => !(p.kinds || []).includes('application'));
+    const notSuite = r => !isSuite(r);
     const cols = {
-      app: perYear(app, deps), other: perYear(other, deps),
+      app: perYear(app, deps, notSuite), other: perYear(other, deps, notSuite),
       suites: perYear(inM, deps, isSuite),
-      est: perYear(inM, deps, r => { const c = r.kind === 'permit' && r.phase === 'completed' && completedAt(r); return !!(c && c.estimated); }),
+      est: perYear(inM, deps, r => { const c = notSuite(r) && r.kind === 'permit' && r.phase === 'completed' && completedAt(r); return !!(c && c.estimated); }),
     };
     for (const y of years) {
       const r = { app: cols.app[y] || 0, other: cols.other[y] || 0, suites: cols.suites[y] || 0, est: cols.est[y] || 0 };
@@ -90,15 +94,73 @@ function markdown(res) {
   const mark = r => (r.gap == null ? '' : r.within ? ' ✓' : ' ✗');
   const out = [];
   for (const m of [...MUNIS, 'Peel']) {
-    out.push(`\n### ${m}\n`, '| Year | App (applications) | Other | **All** | CMHC | Gap | Suites in All | Estimated dates in All |', '|---|---|---|---|---|---|---|---|');
+    out.push(`\n### ${m}\n`, '| Year | App (applications) | Other | **All** | CMHC | Gap | Suites (not in All) | Estimated dates in All |', '|---|---|---|---|---|---|---|---|');
     for (const r of res.rows.filter(x => x.m === m)) out.push(`| ${r.year} | ${n(r.app)} | ${n(r.other)} | **${n(r.all)}** | ${r.cmhc == null ? '–' : n(r.cmhc)} | ${pc(r.gap)}${mark(r)} | ${n(r.suites)} | ${n(r.est)} |`);
   }
-  out.push(`\n### ${res.years[0]}–${res.years[res.years.length - 1]} totals\n`, '| | App | Other | **All** | CMHC | Gap | Years within ±10% |', '|---|---|---|---|---|---|---|');
-  for (const t of totals(res)) out.push(`| ${t.m} | ${n(t.app)} | ${n(t.other)} | **${n(t.all)}** | ${n(t.cmhc)} | ${pc(t.gap)} | ${t.yearsWithin} of ${t.years} |`);
+  out.push(`\n### ${res.years[0]}–${res.years[res.years.length - 1]} totals\n`, '| | App | Other | **All** | CMHC | Gap | Years within ±10% | Suites (not in All) |', '|---|---|---|---|---|---|---|---|');
+  for (const t of totals(res)) out.push(`| ${t.m} | ${n(t.app)} | ${n(t.other)} | **${n(t.all)}** | ${n(t.cmhc)} | ${pc(t.gap)} | ${t.yearsWithin} of ${t.years} | ${n(t.suites)} |`);
   return out.join('\n');
 }
 
-if (require.main === module) {
+// ---- Bucket 2: dating a building filed in stages (Mississauga) ---------------------------------------
+// A merged permit whose events carry a 'stage' part (js/phases.js permitPart) is a building filed in
+// stages. Three candidate rules for its completion date; every other permit keeps js/areas.js completedAt.
+//   A(lead)  the full permit's final sign-off, `lead` months earlier (people move in before the last
+//            inspection); a full permit issued and not signed off: not complete yet; no full permit
+//            on file: the last stage closure
+//   B        the last stage closure
+//   C(lag)   the final sign-off; no final sign-off: the last stage closure, `lag` months later
+const MONTH = 30.44 * 864e5;
+function staged(r) {
+  if (r.kind !== 'permit' || !(r.events || []).some(e => e.part === 'stage')) return null;
+  const done = part => r.events.filter(e => e.phase === 'completed' && e.part === part).map(e => +e.date);
+  const fin = done('final'), stg = done('stage');
+  return { final: fin.length ? Math.min(...fin) : null, stage: stg.length ? Math.max(...stg) : null, fullOpen: !fin.length && r.events.some(e => e.part === 'final' && e.phase === 'permit') };
+}
+function datingRule(rule, months = 0, base = A.completedAt) {
+  return r => {
+    const s = staged(r); if (!s) return base(r);
+    let d = null;
+    if (rule === 'A') d = s.final != null ? s.final - months * MONTH : s.fullOpen ? null : s.stage;
+    else if (rule === 'B') d = s.stage != null ? s.stage : s.final;
+    else if (rule === 'C') d = s.final != null ? s.final : s.stage != null ? s.stage + months * MONTH : null;
+    return d == null ? null : { date: d, estimated: false };
+  };
+}
+// The one number of a rule (0–36 months) that brings a municipality's years closest to CMHC's
+// (least sum of squared relative gaps over the calibration years).
+function fitRule(projects, cmhc, rule, m = 'Mississauga', o = {}) {
+  const tries = rule === 'B' ? [0] : Array.from({ length: 37 }, (_, i) => i);
+  let best = null;
+  for (const k of tries) {
+    const res = reconcile(projects, cmhc, { ...o, completedAt: datingRule(rule, k) });
+    const rows = res.rows.filter(r => r.m === m), err = rows.reduce((t, r) => t + (r.gap || 0) ** 2, 0);
+    if (!best || err < best.err) best = { rule, months: k, err, res };
+  }
+  return best;
+}
+
+if (require.main === module && process.argv.includes('--rules')) {
+  const { loadAppDevs } = require('./app-devs.js');
+  const DATA = path.join(__dirname, '..', 'data');
+  const cm = require(path.join(DATA, 'peel-housing.json')).activity.muni;
+  const { projects } = loadAppDevs(DATA);
+  const o = { nowYear: new Date().getFullYear() };
+  const n = v => Math.round(v).toLocaleString('en-CA'), pc = g => (g == null ? '–' : `${g > 0 ? '+' : ''}${Math.round(g * 100)}%`);
+  const line = (label, res) => {
+    const rows = res.rows.filter(r => r.m === 'Mississauga'), t = totals(res).find(x => x.m === 'Mississauga');
+    return `| ${label} | ${rows.map(r => `${n(r.all)} (${pc(r.gap)})${r.within ? ' ✓' : ''}`).join(' | ')} | **${n(t.all)}** (${pc(t.gap)}) | ${t.yearsWithin} of 5 |`;
+  };
+  const cur = reconcile(projects, cm, o);
+  const out = ['| Mississauga | 2021 | 2022 | 2023 | 2024 | 2025 | 2021–2025 | Years ±10% |', '|---|---|---|---|---|---|---|---|',
+    `| CMHC | ${YEARS.map(y => n(cm.Mississauga[y].completions.all)).join(' | ')} | **${n(YEARS.reduce((t, y) => t + cm.Mississauga[y].completions.all, 0))}** | |`,
+    line('Today (latest date)', cur)];
+  for (const rule of ['A', 'B', 'C']) {
+    const b = fitRule(projects, cm, rule, 'Mississauga', o);
+    out.push(line(`${rule}${rule === 'B' ? '' : ` (${b.months} mo)`}`, b.res));
+  }
+  console.log(out.join('\n'));
+} else if (require.main === module) {
   const { loadAppDevs } = require('./app-devs.js');
   const DATA = path.join(__dirname, '..', 'data');
   const housing = require(path.join(DATA, 'peel-housing.json'));
@@ -108,4 +170,4 @@ if (require.main === module) {
   else console.log(`Completions: the app's building permits against CMHC (Region of Peel open data, edited ${housing.activity.edited}).\n${markdown(res)}`);
 }
 
-module.exports = { reconcile, totals, markdown, MUNIS, YEARS, TOLERANCE };
+module.exports = { reconcile, totals, markdown, datingRule, fitRule, staged, MUNIS, YEARS, TOLERANCE };

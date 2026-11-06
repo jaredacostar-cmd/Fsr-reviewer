@@ -25,7 +25,7 @@ completions, so completions have to be right first.
 | # | Bucket | Status |
 |---|---|---|
 | 1 | Baseline and definitions: CMHC's definition, reconciliation report, no app changes | Done (checkpoint 1, 2026-11-06) |
-| 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | **Plan awaiting confirmation** |
+| 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | **At checkpoint 2** |
 | 3 | Brampton undercount: units on permits that state none, issue→completion lag, permit coverage | – |
 | 4 | Remaining gaps, reviewed case by case | – |
 | 5 | In the app: application + other = all, CMHC beside it, flag when over 10% | – |
@@ -117,3 +117,39 @@ Using the first sign-off, the original Bucket 2 idea, is **not supported by the 
 - **The base permit's sign-off alone undercounts:** a rough test gives about 8,000–9,300 apartments
   in 2021–2025 against CMHC's 12,169. 32 buildings (13,046 units) have no final sign-off yet, and
   some are already occupied (151 City Centre Dr is a registered condominium with no full permit row).
+
+### Bucket 2 decisions (owner, 2026-11-06)
+
+| # | Decision |
+|---|---|
+| 11 | Replace "first sign-off" with dating each building filed in stages from its stage closures and final sign-off. |
+| 12 | A dating rule may be fitted to CMHC, with **one** explainable number per rule, not one per year. |
+
+### Bucket 2 results (data: snapshot 2026-10-19)
+
+Built:
+- **Suites:** out of All, reported as a line of their own (decision 8).
+- **Stage labels:** each permit event now records which part of the permit it belongs to (`e.part`:
+  `stage` or `final`, from `js/phases.js permitPart`), kept when rows are merged. No figure in the
+  app changes.
+- **Rules A, B and C:** in `scripts/cmhc-reconcile.js` (`--rules`), each with its one number fitted
+  to CMHC.
+
+2021–2025 with suites removed (Mississauga 17,705, +27%; Brampton 5,405, −43%; Caledon 1,889, −29%;
+Peel 24,999, −4%).
+
+Mississauga under each rule (units, gap against CMHC):
+
+| Mississauga | 2021 | 2022 | 2023 | 2024 | 2025 | 2021–2025 | Years ±10% |
+|---|---|---|---|---|---|---|---|
+| CMHC | 3,368 | 1,161 | 3,083 | 2,469 | 3,893 | **13,974** | |
+| Today (latest date) | 2,368 (−30%) | 1,495 (+29%) | 3,121 (+1%) ✓ | 4,323 (+75%) | 6,398 (+64%) | **17,705** (+27%) | 1 of 5 |
+| A: final sign-off (lead fitted: 0 mo) | 2,368 (−30%) | 1,194 (+3%) ✓ | 1,941 (−37%) | 2,507 (+2%) ✓ | 2,299 (−41%) | **10,309** (−26%) | 2 of 5 |
+| B: last stage closure | 1,500 (−55%) | 2,483 (+114%) | 4,159 (+35%) | 3,432 (+39%) | 5,697 (+46%) | **17,271** (+24%) | 0 of 5 |
+| C: final, else last stage + 24 mo | 3,046 (−10%) ✓ | 1,194 (+3%) ✓ | 1,941 (−37%) | 2,808 (+14%) | 3,479 (−11%) | **12,468** (−11%) | 2 of 5 |
+
+- **Two numbers don't help:** a final-sign-off lead and a stage lag fitted together don't beat C.
+- **Why single years swing:** 68% of Mississauga's 2021–2025 completions are in towers of 300+
+  units, and only 2–5 such towers finish in a year, so one tower is 10–35% of the year. If a tower's
+  date falls on the wrong side of December 31, that year misses ±10%, whatever the rule.
+- **Two-year windows under C:** 2021–22 −6%, 2022–23 −26%, 2023–24 −14%, 2024–25 −1%.
