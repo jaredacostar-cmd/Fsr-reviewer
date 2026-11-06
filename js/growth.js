@@ -75,12 +75,17 @@
    * share a base permit number); the same building counted in two different years is
    * the residual edge case.
    *
-   * deps: { completedAt(record), permitUnits(records) }
+   * deps: { completedAt(record), permitUnits(records), nowYear?, from?, to? }
+   * from / to: the years the time filter selects (inclusive, either open-ended): only completions
+   * dated in them count, and a year without completions still counts towards the average, so
+   * perYear (and the returned `span`) is over the years selected, up to the data year.
    * Returns { years: [{ year, units, projects }], byMuni: [{ m, units, projects,
-   *   years, perYear }], estimated, totalUnits }.
+   *   years, perYear }], estimated, totalUnits, span }.
    */
   function completionStats(projects, deps) {
     const { completedAt, permitUnits } = deps;
+    const ranged = deps.from != null || deps.to != null;
+    const lo = deps.from != null ? deps.from : -Infinity, hi = deps.to != null ? deps.to : Infinity;
     const years = new Map(), munis = new Map();
     let estimated = 0, totalUnits = 0;
     for (const p of projects) {
@@ -101,6 +106,7 @@
         byYear.get(y).push(r);
       }
       for (const [y, rs] of byYear) {
+        if (y < lo || y > hi) continue;
         const units = permitUnits(rs) || 0;
         let yy = years.get(y);
         if (!yy) { yy = { year: y, units: 0, projects: new Set() }; years.set(y, yy); }
@@ -117,11 +123,19 @@
     const yearList = [...years.values()]
       .map(y => ({ year: y.year, units: y.units, projects: y.projects.size }))
       .sort((a, b) => a.year - b.year);
+    // The years selected, up to the data year (open start: the first year with a completion).
+    let span = null;
+    if (ranged) {
+      const first = yearList.length ? yearList[0].year : null;
+      const a = deps.from != null ? deps.from : first;
+      const b = Math.min(deps.to != null ? deps.to : Infinity, deps.nowYear != null ? deps.nowYear : Infinity);
+      span = a != null && Number.isFinite(b) && b >= a ? { from: a, to: b, n: b - a + 1 } : null;
+    }
     const muniList = [...munis.entries()].map(([m, o]) => ({
       m, units: o.units, projects: o.projects.size, years: o.years.size,
-      perYear: o.years.size ? o.units / o.years.size : 0,
+      perYear: span ? o.units / span.n : o.years.size ? o.units / o.years.size : 0,
     }));
-    return { years: yearList, byMuni: muniList, estimated, totalUnits };
+    return { years: yearList, byMuni: muniList, estimated, totalUnits, span };
   }
 
   /**

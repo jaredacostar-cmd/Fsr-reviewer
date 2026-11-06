@@ -37,6 +37,24 @@ test('completions per year by municipality count only years up to the data year 
   assert.match(src('js/growth-ui.js'), /permitUnits: rs => P\.permitUnits\(rs\), nowYear:/);
 });
 
+test('completions with years selected: only those years count, averaged over every year selected (owner 2026-11-06)', () => {
+  const G = require('../js/growth.js');
+  const r = (y, units) => ({ kind: 'permit', phase: 'completed', units, ref: `B${y}${units}`, y });
+  const proj = { key: 'a', municipality: 'Brampton', phase: 'completed', records: [r(2017, 5), r(2024, 10), r(2026, 30), r(2027, 7)] };
+  const deps = { completedAt: x => ({ date: Date.UTC(x.y, 5, 1), estimated: false }), permitUnits: rs => rs.reduce((t, x) => t + x.units, 0), nowYear: 2026 };
+  const one = G.completionStats([proj], { ...deps, from: 2026, to: 2026 });
+  assert.deepEqual(one.years.map(y => [y.year, y.units]), [[2026, 30]], '2026 alone: not the 2017 and 2024 completions');
+  assert.deepEqual(one.span, { from: 2026, to: 2026, n: 1 });
+  assert.equal(one.byMuni[0].perYear, 30);
+  const three = G.completionStats([proj], { ...deps, from: 2024, to: 2026 });
+  assert.equal(three.byMuni[0].perYear, 40 / 3, '2025 had none and still counts as a year selected');
+  assert.deepEqual(G.completionStats([proj], { ...deps, from: 2025 }).span, { from: 2025, to: 2026, n: 2 }, 'open end: up to the data year');
+  assert.equal(G.completionStats([proj], deps).span, null, 'no years selected: every year, as before');
+  const ui = src('js/growth-ui.js');
+  assert.match(ui, /from: S\.yearFrom, to: S\.yearTo/, 'Growth › Pipeline passes the time filter\'s years');
+  assert.match(ui, /const compV = span \? yrUnits : t\.completed/, 'the Completed tile counts the years selected');
+});
+
 test('growth: the census context is the filtered area\'s; the largest unbuilt pairs left-to-build with its people; targets net of pre-census homes', () => {
   const g = src('js/growth-ui.js');
   assert.match(g, /PeelAreas\.censusTotals\(bc\.das, \{ muni: st\.muni, sp: st\.sp, mtsa: st\.mtsa \}\)\.dwellings/);

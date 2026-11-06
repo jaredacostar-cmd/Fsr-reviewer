@@ -52,7 +52,7 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(dca, /const big = R\.list\.filter\(r => s === 'both' \|\| r\.sys === s\)\.sort\(\(a, b\) => b\.bo - a\.bo\)\[0\]/);
   assert.match(dca, /both = s === 'both' \? '' : ' \(both systems\)';/);
   // Growth: completed, and how many of them since the census (the chart's "Built since 2021").
-  assert.match(src('js/growth-ui.js'), /completed\$\{sinceC >= 0\.5 && Math\.round\(sinceC\) !== Math\.round\(t\.completed\)/);
+  assert.match(src('js/growth-ui.js'), /completed\$\{span \? ` \(\$\{fmtNum\(Math\.round\(yrUnits\)\)\} of them in \$\{yrSpan\}\)` : ''\}\$\{!span && sinceC >= 0\.5 && Math\.round\(sinceC\) !== Math\.round\(t\.completed\)/);
   // Growth › Timing names its pace; the trigger year is not doubled ("≈2027 2027").
   const t = src('js/timing.js');
   assert.match(t, /title: 'Plants: 90% trigger year at the forecast pace'/);

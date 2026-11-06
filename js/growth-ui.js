@@ -63,7 +63,9 @@
     const t = Growth.pipelineTotals(set);
     const gd = growthDeps();
     const { bt, emp } = Growth.aggregateTypes(set, gd.aggregate);
-    const comp = Growth.completionStats(set, gd.completions);
+    // With years selected in the time filter, completions are those dated in them, averaged over them.
+    const S = App().state, timeOn = !!(App().timeActive && App().timeActive());
+    const comp = Growth.completionStats(set, timeOn ? { ...gd.completions, from: S.yearFrom, to: S.yearTo } : gd.completions);
     const lags = Growth.approvalLags(set);
     const apprByM = Object.fromEntries(Growth.medianApprovalByMuni(lags).map(r => [r.m, r]));
     const allMedian = Growth.median(lags.map(l => l.months));
@@ -79,23 +81,31 @@
     // Completed per year, clipped to the data year: a completion dated in the future is a data error,
     // not a year of completions (design audit, Group 8: no more "2017–2027").
     const nowY = (window.PeelMapMarkers && window.PeelMapMarkers.THIS_YEAR) || new Date().getFullYear();
-    const yrs = comp.years.filter(y => y.year <= nowY), yrUnits = yrs.reduce((t, y) => t + y.units, 0), yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
+    const yrs = comp.years.filter(y => y.year <= nowY), yrUnits = yrs.reduce((t, y) => t + y.units, 0);
+    const span = timeOn ? comp.span : null;   // (the years selected, up to the data year)
+    const yr0 = span ? span.from : yrs.length ? yrs[0].year : null, yr1 = span ? span.to : yrs.length ? yrs[yrs.length - 1].year : null;
+    const nYrs = span ? span.n : yrs.length, perYr = nYrs ? Math.round(yrUnits / nYrs) : null;
+    const yrSpan = yr0 == null ? '' : yr0 === yr1 ? `${yr0}` : `${yr0}–${yr1}`;
+    // The Completed figure: every home built on the developments shown, or, with years selected,
+    // the homes completed in those years (the developments' other completions are the context).
+    const compV = span ? yrUnits : t.completed;
+    const compSub = span ? `in ${yrSpan}${span.n > 1 ? ` · ≈${fmtNum(perYr)}/yr` : ''} · ${fmtNum(Math.round(t.completed))} in all years` : yrs.length ? `≈${fmtNum(perYr)}/yr completed ${yrSpan}` : '';
     // (completed since census day: the Built layer, as the stage chart's "Built since 2021")
     const sinceC = set.length && root.PeelLayers ? root.PeelLayers.totals(set).units.built || 0 : 0;
     const head = set.length
-      ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed${sinceC >= 0.5 && Math.round(sinceC) !== Math.round(t.completed) ? ` (${fmtNum(Math.round(sinceC))} since the 2021 census)` : ''}, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
+      ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed${span ? ` (${fmtNum(Math.round(yrUnits))} of them in ${yrSpan})` : ''}${!span && sinceC >= 0.5 && Math.round(sinceC) !== Math.round(t.completed) ? ` (${fmtNum(Math.round(sinceC))} since the 2021 census)` : ''}, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
       : root.PeelApp && root.PeelApp.developmentsReady && !root.PeelApp.developmentsReady() ? 'Loading the developments…' : 'No developments match the current filters.';
     // Completions per year: a compact strip; the numbers by municipality below it.
     const cmax = Math.max(1, ...yrs.map(y => y.units));
-    const strip = yrs.length ? `<div class="cc-strip" role="img" aria-label="Units completed per year, ${yr0} to ${yr1}">${yrs.map(y => `<div class="cc-bar" style="--h:${(y.units / cmax * 100).toFixed(1)}" title="${y.year}: ${fmtNum(Math.round(y.units))} units in ${fmtNum(y.projects)} development${y.projects === 1 ? '' : 's'}"><i></i><span>${String(y.year).slice(2)}</span></div>`).join('')}</div>` : '';
+    const strip = yrs.length ? `<div class="cc-strip" role="img" aria-label="Units completed per year, ${yrs[0] && yrs[0].year} to ${yrs.length && yrs[yrs.length - 1].year}">${yrs.map(y => `<div class="cc-bar" style="--h:${(y.units / cmax * 100).toFixed(1)}" title="${y.year}: ${fmtNum(Math.round(y.units))} units in ${fmtNum(y.projects)} development${y.projects === 1 ? '' : 's'}"><i></i><span>${String(y.year).slice(2)}</span></div>`).join('')}</div>` : '';
     // The approval-pace column shows only once it has data (SPEC §5).
     const pace = lags.length > 0 && allMedian != null;
     const mrow = m => {
-      const c = comp.byMuni.find(r => r.m === m), a = apprByM[m];
+      const c = comp.byMuni.find(r => r.m === m), a = apprByM[m];   // (perYear: over the years selected, when there are)
       return `<tr><td>${esc(m)}</td><td>${c ? `${fmtNum(Math.round(c.perYear))}<small>/yr · ${fmtNum(c.projects)} devs</small>` : '–'}</td>${pace ? `<td>${a && a.medianMonths != null ? `${a.medianMonths.toFixed(0)}<small> mo · n=${a.n}</small>` : '–'}</td>` : ''}</tr>`;
     };
     const muniTable = `<table class="dt"><caption>Completions${pace ? ' and approval pace' : ''} by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th>${pace ? '<th>Median application → approval</th>' : ''}</tr></thead><tbody>${DU().MUNIS.map(mrow).join('')}
-      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(yrUnits / yrs.length))}<small>/yr</small>` : '–'}</td>${pace ? `<td>${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small></td>` : ''}</tr></tbody></table>`;
+      <tr class="tot"><td>Peel</td><td>${nYrs ? `${fmtNum(perYr)}<small>/yr</small>` : '–'}</td>${pace ? `<td>${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small></td>` : ''}</tr></tbody></table>`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     // Completions per year and pace by municipality are area content: not at a development's scope.
     const site = !!(window.DevScope && window.DevScope.current());
@@ -105,7 +115,7 @@
       <h3 class="sub-title" data-info="demand-units">Homes</h3>
       <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with units` : '', 'demand-units')}
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
-        ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
+        ${tile('Completed', fmtNum(Math.round(compV)), compSub, 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
       ${layerStripHTML(set)}
       ${empTiles}
@@ -113,9 +123,9 @@
       <p class="small muted">The largest developments still to build are on the Overview (one list).</p>
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
       ${site ? siteCompareHTML(root.PeelDevVerdict && root.PeelDevVerdict.scopedDev()) : strip + muniTable}
-      <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+      <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yrSpan || '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
     // Stage 3: the standard panel; the tables above are its full table.
-    if (root.PeelPanel) root.PeelPanel.set('growth:pipeline', pipelinePanelSpec({ set, t, emp, comp, yrs, yrUnits, yr0, yr1, head, site, bt }));
+    if (root.PeelPanel) root.PeelPanel.set('growth:pipeline', pipelinePanelSpec({ set, t, emp, comp, head, site, bt, compV, compSub: span ? compSub : yrs.length ? `≈${fmtNum(perYr)}/yr, ${yrSpan}` : '' }));
     // The pipeline by stage reuses the growth chart (no census baseline here).
     const bc = CA().baselineCensus();
     if (bc) {
@@ -152,7 +162,7 @@
   }
   // ---- Stage 3: Growth › Pipeline as the standard panel ---------------------------------------------
   function pipelinePanelSpec(o) {
-    const PN = root.PeelPanel, { set, t, emp, comp, yrs, yrUnits, yr0, yr1, head, site, bt } = o;
+    const PN = root.PeelPanel, { set, t, emp, comp, head, site, bt, compV, compSub } = o;
     const pc = v => `${Math.round(v * 100)}%`, p = site && root.PeelDevVerdict ? root.PeelDevVerdict.scopedDev() : null;
     const typeRows = D.UNIT_TYPES.filter(ty => bt[ty.key] && bt[ty.key].planned >= 0.5).sort((a, b) => bt[b.key].planned - bt[a.key].planned)
       .map(ty => PN.kv(esc(ty.label), `${fmtNum(Math.round(bt[ty.key].planned))} planned · ${fmtNum(Math.round(bt[ty.key].left))} left`));
@@ -197,7 +207,7 @@
       figures: [
         { v: fmtNum(Math.round(t.planned)), u: 'units', label: 'planned', ctx: t.n ? `${fmtNum(t.n)} developments with units` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
         { v: fmtNum(Math.round(t.permitted)), u: 'units', label: 'permitted', ctx: t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
-        { v: fmtNum(Math.round(t.completed)), u: 'units', label: 'completed', ctx: !site && yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr, ${yr0}–${yr1}` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
+        { v: fmtNum(Math.round(site ? t.completed : compV)), u: 'units', label: 'completed', ctx: site ? '' : compSub, attrs: site ? null : { 'data-full-table': 'growth' } },
         { v: fmtNum(Math.round(t.left)), u: 'units', label: 'left to build', ctx: t.planned ? `${pc(t.left / t.planned)} of planned` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
       ],
       chart: layerStripHTML(set),
