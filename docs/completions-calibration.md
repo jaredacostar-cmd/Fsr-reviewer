@@ -338,3 +338,50 @@ permit feed and photos are served.
 |---|---|
 | 24 | The full sample (149 permits) runs, by the same method. |
 | 25 | **Measured truth wins over the CMHC target for Caledon:** the measured build time is used even if Caledon then sits above CMHC. The remaining gap is explained in Bucket 4. This qualifies decision 1 (calibrate to CMHC) where a direct measurement exists. |
+
+## Bucket 4b: the full aerial sample (2026-11-06)
+
+**Judging:** 139 permits by four agents, with the same written criteria and the pilot as
+calibration, plus the 10 pilot permits. I re-checked 21 calls myself: every "not built" and
+"unsure" call, the anomalies, and 3 random "built" ones. All 21 agreed. Results are in
+`docs/completions-calibration/caledon-aerial-results.json`.
+
+| Of 149 | |
+|---|---|
+| Built | 132 |
+| Not built by the 2025 photo | 9, all open permits issued Dec 2022 – mid 2024: 7 lots untouched (one used as a builder's yard), 2 framing |
+| On a house that already stood | 7 "1-unit" permits that are additions or renovations, not new homes |
+| Location unknown | 1 (rural forest parcel) |
+
+**Build time** (photos taken as mid-May of each year):
+- 77% of houses were roofed in the first photo after their issue year.
+- The roof went on between about 0 and 12 months after issue: median of the upper bounds 11.8
+  months, midpoint about 6. Rows take longer than singles (midpoint 10.5 against 5.7 months).
+- So a house is lived in about **12 months after issue**. That matches CMHC's Caledon construction
+  time (about 11–15 months) and the app's +12 months for closed permits.
+
+**Built share** (open permits, new homes only, by the 2025 photo):
+
+| Issued | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 |
+|---|---|---|---|---|---|---|
+| Built | 3 of 3 | 5 of 5 | 25 of 25 | 14 of 16 | 7 of 12 | 8 of 10 |
+
+All 70 closed permits checked were built.
+
+**The fitted N = 24 blended two things:** houses take about 12 months, but some recent open permits
+are never built, or not yet. `js/phases.js closeOpenCaledonHouses` now takes them separately: the
+date (issue + months) and the age a permit must reach to be taken as built (minAge). The default is
+unchanged (24 / 24) until the owner decides.
+
+Caledon against CMHC by rule (2021–2025; CMHC 409 · 640 · 854 · 415 · 349 = 2,667):
+
+| Rule | 2021 | 2022 | 2023 | 2024 | 2025 | Total |
+|---|---|---|---|---|---|---|
+| Today: fitted 24 / 24 | −44% | −7% ✓ | +31% | −3% ✓ | +75% | +11% |
+| Measured date (12), built once 24 months old | −31% | +46% | +13% | −28% | +152% | +26% |
+| Measured date (12), built once 36 months old | −31% | +46% | +13% | −41% | +21% | +7% |
+
+**A question for Bucket 4:** the photos show 17 of 19 sampled 2024 permits built by mid-2025, yet
+CMHC counts 349 Caledon completions in 2025. CMHC reports completions by zone, and the Region adds
+the zones up into municipalities. If any of Caledon's growth areas next to Brampton sit in a
+Brampton zone, Caledon would look short and Brampton long.

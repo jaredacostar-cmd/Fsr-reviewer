@@ -917,7 +917,8 @@
   // The date is kept on the permit (r.estimatedCompletion, read by js/areas.js completedAt), not added as
   // an event: an estimate is no milestone, so Timing's curves (dated completions only) never learn from it.
   const OPEN_HOUSE_MONTHS = 24;
-  function closeOpenCaledonHouses(records, asOf, months = OPEN_HOUSE_MONTHS) {
+  // (minAge: how old the permit must be, at the data date, to be taken as built; the date is issue + months)
+  function closeOpenCaledonHouses(records, asOf, months = OPEN_HOUSE_MONTHS, minAge = months) {
     if (asOf == null) { asOf = -Infinity; for (const r of records) for (const e of r.events || []) if (+e.date > asOf) asOf = +e.date; }
     if (!isFinite(asOf)) return 0;
     let n = 0;
@@ -927,7 +928,7 @@
       const issued = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date);
       if (!issued.length) continue;
       const at = Math.min(...issued) + months * MONTH_MS;
-      if (at > asOf) continue;
+      if (at > asOf || Math.min(...issued) + minAge * MONTH_MS > asOf) continue;
       r.phase = 'completed'; r.completedEstimated = true; r.estimatedCompletion = at; n++;
     }
     return n;
@@ -937,7 +938,7 @@
     records = rest;
     let groups = new Map();
     closeStalePermits(records, opts.asOf);
-    closeOpenCaledonHouses(records, opts.asOf, opts.openHouseMonths);
+    closeOpenCaledonHouses(records, opts.asOf, opts.openHouseMonths, opts.openHouseMinAge);
     for (const r of records) readTextUnits(r);
     for (const r of records) {
       const k = projectKey(r);
