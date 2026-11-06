@@ -331,3 +331,10 @@ permit feed and photos are served.
 - **Flight dates are not in the services' metadata**, only the year. Most years are leaf-off (spring);
   2023 and 2025 look leaf-on (summer). So a lag is known to within one photo interval, about ±6 months.
 - **Coverage gaps:** one 2018 photo was blank at a permit's point.
+
+**Checkpoint 4a decisions (owner, 2026-11-06):**
+
+| # | Decision |
+|---|---|
+| 24 | The full sample (149 permits) runs, by the same method. |
+| 25 | **Measured truth wins over the CMHC target for Caledon:** the measured build time is used even if Caledon then sits above CMHC. The remaining gap is explained in Bucket 4. This qualifies decision 1 (calibrate to CMHC) where a direct measurement exists. |
