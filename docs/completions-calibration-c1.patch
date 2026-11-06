@@ -1,0 +1,62 @@
+diff --git a/js/areas.js b/js/areas.js
+index 5d3999b..1d5812c 100644
+--- a/js/areas.js
++++ b/js/areas.js
+@@ -115,6 +115,8 @@
+       const stg = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
+       if (stg.length) return { date: Math.max(...stg) + STAGED_LAG_MONTHS * MONTH, estimated: true };
+     }
++    // (a Caledon house permit left open: js/phases.js closeOpenCaledonHouses dates it)
++    if (r.estimatedCompletion != null) return { date: r.estimatedCompletion, estimated: true };
+     const done = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
+     if (done.length) return { date: Math.max(...done), estimated: !!r.completedEstimated };
+     const issued = r.events.filter(e => e.phase === 'permit').map(e => +e.date);
+diff --git a/js/phases.js b/js/phases.js
+index eb9e56a..6c7cade 100644
+--- a/js/phases.js
++++ b/js/phases.js
+@@ -909,11 +909,35 @@
+     for (const r of held) if (!('unitsStated' in r)) { r.unitsStated = r.units; r.units = secondUnitNet(r); }
+     return { held, rest };
+   }
++  // Caledon leaves a house's building permit "Issued" long after the house is built (of the homes
++  // permitted in 2021, 443 units still open in 2026 against 492 closed), and publishes no completion
++  // date. A Caledon house permit (fewer than 20 units, homes not suites) still Issued is taken as built
++  // OPEN_HOUSE_MONTHS after it was first issued, once that date has passed, marked estimated (completions
++  // calibration, fix C1: docs/completions-calibration.md; the number fitted to CMHC's completions).
++  // The date is kept on the permit (r.estimatedCompletion, read by js/areas.js completedAt), not added as
++  // an event: an estimate is no milestone, so Timing's curves (dated completions only) never learn from it.
++  const OPEN_HOUSE_MONTHS = 24;
++  function closeOpenCaledonHouses(records, asOf, months = OPEN_HOUSE_MONTHS) {
++    if (asOf == null) { asOf = -Infinity; for (const r of records) for (const e of r.events || []) if (+e.date > asOf) asOf = +e.date; }
++    if (!isFinite(asOf)) return 0;
++    let n = 0;
++    for (const r of records) {
++      if (r.municipality !== 'Caledon' || r.kind !== 'permit' || r.phase !== 'permit' || !/^\s*issued\s*$/i.test(r.statusRaw || '')) continue;
++      if (!(r.units > 0 && r.units < 20) || permitRole(r) !== 'units' || (r.events || []).some(e => e.phase === 'completed')) continue;
++      const issued = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date);
++      if (!issued.length) continue;
++      const at = Math.min(...issued) + months * MONTH_MS;
++      if (at > asOf) continue;
++      r.phase = 'completed'; r.completedEstimated = true; r.estimatedCompletion = at; n++;
++    }
++    return n;
++  }
+   function buildProjects(records, opts = {}) {
+     const { held, rest } = holdSecondUnits(records);
+     records = rest;
+     let groups = new Map();
+     closeStalePermits(records, opts.asOf);
++    closeOpenCaledonHouses(records, opts.asOf, opts.openHouseMonths);
+     for (const r of records) readTextUnits(r);
+     for (const r of records) {
+       const k = projectKey(r);
+@@ -1874,7 +1898,7 @@
+     dedupeRecords,
+     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
+     phaseFromStatus, detectFields, parseDate, normalizeAddress, displayAddress, normalizeRecord,
+-    representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
++    representativePoint, buildProjects, closeStalePermits, closeOpenCaledonHouses, OPEN_HOUSE_MONTHS, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
+     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
+     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, submittedAt, newestFirst, proposedStateOf, dormantOf, DORMANT_YEARS,
+     // The joining and stage rules' numbers, for Reference › How the app decides (js/logic.js).

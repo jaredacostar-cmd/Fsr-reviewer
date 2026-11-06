@@ -264,7 +264,7 @@ completed permits that state no units, in their years, as "built since the censu
 - **What moved:** Brampton's completions per year only. Built since the census and the tiles already
   counted the inferred homes.
 
-### Fix C1: fitted, held for the owner's review (not committed)
+### Fix C1: fitted, held for the owner's review (saved as `docs/completions-calibration-c1.patch`, not applied)
 
 `js/phases.js closeOpenCaledonHouses`: a Caledon house permit (fewer than 20 units, homes not suites)
 still "Issued" N months after first issue is taken as built then, estimated. The date is kept on the
@@ -288,3 +288,6 @@ What else C1 moves, because those houses become built across the app:
   longer wait on servicing.
 - **Development keys:** 3 Caledon developments get new keys. A key comes partly from its files'
   stages.
+
+To apply C1 once approved: `git apply docs/completions-calibration-c1.patch`, then rebuild the DC gate
+(`node scripts/build-dc-gate.js --data data`), which its test asks for.
