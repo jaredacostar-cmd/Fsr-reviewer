@@ -19,6 +19,8 @@
 //
 //   node scripts/cmhc-reconcile.js            markdown tables
 //   node scripts/cmhc-reconcile.js --json     the numbers
+//   node scripts/cmhc-reconcile.js --types    by dwelling type (CMHC's four)
+//   node scripts/cmhc-reconcile.js --rules    bucket 2: dating rules for buildings filed in stages
 const path = require('path');
 const G = require('../js/growth.js');
 const P = require('../js/phases.js');
@@ -166,7 +168,50 @@ function fitRule(projects, cmhc, rule, m = 'Mississauga', o = {}) {
   return best;
 }
 
-if (require.main === module && process.argv.includes('--rules')) {
+// ---- By dwelling type (CMHC's four), per municipality: where a gap sits -------------------------------
+// The permit's own words decide (Brampton types its permits, Mississauga and Caledon describe them).
+// As CMHC counts them: a back-to-back townhouse is a row (joined side by side or side to back), a
+// stacked townhouse an apartment; a building of three or more units that names no house type is an
+// apartment building. Units on permits that state none count nothing here (Brampton's apartments).
+function dwellingType(r) {
+  const t = `${r.type || ''} ${r.description || ''}`;
+  if (/stacked/i.test(t)) return 'apartment';
+  if (/semi[- ]?detached|\bsemi\b/i.test(t)) return 'semi';
+  if (/town ?house|townhome|\brow\b|back[- ]to[- ]back/i.test(t)) return 'row';
+  if (/single|detached/i.test(t)) return 'single';
+  if (/apartment|\bapt\b|condo|tower|high[- ]?rise|mid[- ]?rise|storey|mixed[- ]use|residential (building|bldg)|quatro/i.test(t) || r.units >= 3) return 'apartment';
+  return 'other';
+}
+function byType(projects, cmhc, m, o = {}) {
+  const years = o.years || YEARS, completedAt = o.completedAt || A.completedAt, out = {};
+  for (const k of ['single', 'semi', 'row', 'apartment', 'other']) out[k] = { app: Object.fromEntries(years.map(y => [y, 0])), cmhc: Object.fromEntries(years.map(y => [y, k === 'other' ? 0 : (cmhc[m] && cmhc[m][y] ? cmhc[m][y].completions[k] || 0 : 0)])) };
+  for (const p of projects) {
+    if (p.municipality !== m || p.phase === 'cancelled') continue;
+    for (const r of p.records || []) {
+      if (r.kind !== 'permit' || r.phase !== 'completed' || isSuite(r) || !(r.units > 0)) continue;
+      const c = completedAt(r); if (!c) continue;
+      const y = new Date(c.date).getUTCFullYear(); if (!years.includes(y)) continue;
+      out[dwellingType(r)].app[y] += r.units;
+    }
+  }
+  return out;
+}
+
+if (require.main === module && process.argv.includes('--types')) {
+  const { loadAppDevs } = require('./app-devs.js');
+  const DATA = path.join(__dirname, '..', 'data');
+  const cm = require(path.join(DATA, 'peel-housing.json')).activity.muni;
+  const { projects } = loadAppDevs(DATA);
+  const n = v => Math.round(v).toLocaleString('en-CA'), sum = o => YEARS.reduce((t, y) => t + o[y], 0);
+  for (const m of MUNIS) {
+    const t = byType(projects, cm, m);
+    console.log(`\n### ${m}\n\n| Type | ${YEARS.join(' | ')} | ${YEARS[0]}–${YEARS[YEARS.length - 1]} |\n|---|${YEARS.map(() => '---|').join('')}---|`);
+    for (const [k, v] of Object.entries(t)) {
+      console.log(`| ${k}, app | ${YEARS.map(y => n(v.app[y])).join(' | ')} | **${n(sum(v.app))}** |`);
+      if (k !== 'other') console.log(`| ${k}, CMHC | ${YEARS.map(y => n(v.cmhc[y])).join(' | ')} | **${n(sum(v.cmhc))}** |`);
+    }
+  }
+} else if (require.main === module && process.argv.includes('--rules')) {
   const { loadAppDevs } = require('./app-devs.js');
   const DATA = path.join(__dirname, '..', 'data');
   const cm = require(path.join(DATA, 'peel-housing.json')).activity.muni;
@@ -196,4 +241,4 @@ if (require.main === module && process.argv.includes('--rules')) {
   else console.log(`Completions: the app's building permits against CMHC (Region of Peel open data, edited ${housing.activity.edited}).\n${markdown(res)}`);
 }
 
-module.exports = { reconcile, totals, windows, meets, markdown, datingRule, fitRule, staged, MUNIS, YEARS, TOLERANCE, TARGET };
+module.exports = { reconcile, totals, windows, meets, markdown, datingRule, fitRule, staged, dwellingType, byType, MUNIS, YEARS, TOLERANCE, TARGET };

@@ -26,7 +26,7 @@ completions, so completions have to be right first.
 |---|---|---|
 | 1 | Baseline and definitions: CMHC's definition, reconciliation report, no app changes | Done (checkpoint 1, 2026-11-06) |
 | 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | Done: rule C applied (checkpoint 2b) |
-| 3 | Brampton undercount (and Caledon, if confirmed) | **Plan awaiting confirmation** |
+| 3 | Brampton and Caledon coverage | **At checkpoint 3** |
 | 4 | Remaining gaps, reviewed case by case | – |
 | 5 | In the app: application + other = all, CMHC beside it, flag when over 10% | – |
 | 6 | Forecast on the calibrated completion pace (2031 / 2041 / 2051) | – |
@@ -206,3 +206,40 @@ Units on building permits issued, the app against the Region of Peel's permit st
 
 Brampton's permits carry 15–25% of the units the Region reports: a **coverage** gap, not mainly a
 dating one. Caledon's and Mississauga's permits are close to the Region's.
+
+### Bucket 3 decisions (owner, 2026-11-06)
+
+| # | Decision |
+|---|---|
+| 16 | Bucket 3 covers Brampton **and Caledon**. |
+| 17 | The 17 Mississauga towers dated after today (full permit still open) are deferred to Bucket 4/5. |
+
+### Bucket 3 results: where Brampton's and Caledon's gaps sit (no app change yet)
+
+`node scripts/cmhc-reconcile.js --types` gives completions by CMHC's four dwelling types. As CMHC
+counts them: a back-to-back townhouse is a row, a stacked townhouse an apartment.
+
+**Brampton: houses match; apartments are missing.** 2021–2025, app vs CMHC: singles 2,936 vs 3,010,
+semis 286 vs 288, rows 2,183 vs 2,414, **apartments 0 vs 3,695**.
+- **The Region's permit statistics** count Brampton's second units: 15,550 "Change of Use – Two Unit
+  Dwelling" permits in 2021–2023 alone, all in existing houses. CMHC leaves those out, and so does
+  the app (held aside). They explain most of the gap with the Region's figure.
+- **Apartment permits state no units:** Brampton's 94 completed apartment permits in 2021–2025 say
+  nothing about units. The app already estimates units for a development's build-out from its
+  planning file (`inferBlankPermits`), but completions per year do not use the estimate.
+  - **Fix B1:** count those estimated units in completions per year, dated by the permits. It
+    recovers 2021–2025: 296 · 420 · 384 · 756 · 512 = **2,368 of CMHC's 3,695** apartments.
+
+**Caledon: houses short, a few apartments extra.** Singles 983 vs 1,720, rows 348 vs 798,
+apartments 176 vs 73, unclassed 325 (builders' model homes named only by model: mostly singles).
+- **Permits left open:** Caledon's permits match the Region's, but many house permits stay "Issued"
+  for years. Of the homes issued in 2021, 443 units are open and 492 closed. CMHC counts the houses
+  once built; the app counts only closed permits, or open ones after five years with no status.
+  - **Fix C1:** count an open house permit as complete N months after issue, estimated. It
+    recovers 2021–2025: +12 mo 1,579 · +18 mo 1,293 · +24 mo 1,143.
+- **"(BB)" basement apartments:** most Caledon suites are "Alter Detached (Basement Apartment)",
+  which are conversions. About 884 units (2021–2025) are tagged "(BB)", a tag also on builders'
+  model homes, so it likely marks builder permits in new subdivisions. A basement apartment built
+  with a new house is one CMHC counts.
+  - **Fix C2, the owner's call:** count "(BB)" basement apartments in All.
+- **Data error:** a few garage and deck permits carry unit counts.

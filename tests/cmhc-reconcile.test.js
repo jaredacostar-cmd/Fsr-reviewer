@@ -120,3 +120,14 @@ test('the app dates a building filed in stages by rule C (decision 13)', () => {
   assert.deepEqual([at(done), at(noFinal), at(house)], ['2024-03', '2024-05 est', '2023-02']);
   for (const r of [done, noFinal, house]) assert.deepEqual(A.completedAt(r), R.datingRule('C', 24)(r), 'the app and the reconciliation agree');
 });
+
+test('dwelling types as CMHC counts them: back-to-back a row, stacked an apartment', () => {
+  const t = (type, description, units = 1) => R.dwellingType({ type, description, units });
+  assert.equal(t('Single Family Detached', 'New Complete Building'), 'single');
+  assert.equal(t('Semi Detached Dwelling', 'New Complete Building', 2), 'semi');
+  assert.equal(t('Townhouse - Condominium', 'New Complete Building'), 'row');
+  assert.equal(t('RESIDENTIAL', 'NEW (3) STOREY BACK TO BACK TOWNHOUSE - BLOCK 23 (14 UNITS)', 14), 'row');
+  assert.equal(t('Stacked Townhouses', 'New Complete Building', 24), 'apartment');
+  assert.equal(t('RESIDENTIAL', 'NEW (36) STOREY RESIDENTIAL BLDG w/ (7) LEVELS OF U/G PARKING GARAGE', 430), 'apartment');
+  assert.equal(t('RESIDENTIAL', 'RESIDENTIAL', 2), 'other');
+});
