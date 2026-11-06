@@ -24,8 +24,8 @@ completions, so completions have to be right first.
 
 | # | Bucket | Status |
 |---|---|---|
-| 1 | Baseline and definitions: CMHC's definition, reconciliation report, no app changes | **At checkpoint 1** |
-| 2 | Mississauga dating: date a completion by its first sign-off, not the latest | – |
+| 1 | Baseline and definitions: CMHC's definition, reconciliation report, no app changes | Done (checkpoint 1, 2026-11-06) |
+| 2 | Mississauga dating: date a building's completion correctly (re-scoped, see Bucket 2 findings) | **Plan awaiting confirmation** |
 | 3 | Brampton undercount: units on permits that state none, issue→completion lag, permit coverage | – |
 | 4 | Remaining gaps, reviewed case by case | – |
 | 5 | In the app: application + other = all, CMHC beside it, flag when over 10% | – |
@@ -88,3 +88,32 @@ Diagnostics, as parts of All for 2021–2025:
 1. Confirm the CMHC definition above as the one to match.
 2. Should **suites added to existing houses** come out of All, as CMHC leaves them out?
 3. Once Bucket 1 is approved, Bucket 2 starts on Mississauga's dating (first sign-off).
+
+### Checkpoint 1 decisions (owner, 2026-11-06)
+
+| # | Decision |
+|---|---|
+| 7 | The CMHC definition above is the one to match: complete at about ready to occupy, new structures only. |
+| 8 | **Suites added to existing houses come out of All**, as CMHC leaves them out. They stay a separate line so those homes are not lost from the forecast. |
+| 9 | The baseline is recorded here, not pinned in tests (the data refreshes weekly). |
+| 10 | Bucket 2 (Mississauga dating) starts. |
+
+## Bucket 2: Mississauga (findings before the plan, 2026-11-06)
+
+Using the first sign-off, the original Bucket 2 idea, is **not supported by the data**:
+
+- **By dwelling type, 2021–2025, suites removed:** singles 616 vs CMHC 611 and semis 110 vs 128
+  already match. Rows are 1,446 vs 1,066. **Apartments are 14,715 vs 12,169**, and with an 855-unit
+  tower whose type wasn't recognised, about 15,570.
+- **Why the dates are wrong:** Mississauga publishes each high-rise as several rows under one permit
+  number. **CON** is a conditional permit, usually "foundation only", and it carries the units.
+  **CR1, CR2, …** are later conditional stages, each "completed" when the next stage replaces it. The
+  **base permit** (no suffix) is the full permit, and its completion is the final "all inspections
+  signed off". The app merges the rows, so every stage closure looks like the building being
+  completed. Example: 17-4898 (25 and 34 storeys) shows completions in Nov 2018, Apr 2019, Dec 2020
+  and Feb 2021.
+- **The first closure** is usually the foundation permit, years too early. **The last** is the final
+  sign-off, which can come years after people move in.
+- **The base permit's sign-off alone undercounts:** a rough test gives about 8,000–9,300 apartments
+  in 2021–2025 against CMHC's 12,169. 32 buildings (13,046 units) have no final sign-off yet, and
+  some are already occupied (151 City Centre Dr is a registered condominium with no full permit row).
