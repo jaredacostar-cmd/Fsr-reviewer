@@ -140,3 +140,16 @@ test('completions per year count the homes inferred on permits that state no uni
   const s = G.completionStats([p], { completedAt: r => ({ date: Date.UTC(r.y, 5, 1), estimated: true }), permitUnits: rs => rs.reduce((t, r) => t + (r.units || 0), 0) });
   assert.deepEqual(s.years.map(y => [y.year, y.units]), [[2023, 150], [2024, 160]], 'the 300 inferred homes over the two blank permits, with the 10 stated');
 });
+
+test('a Caledon house permit still Issued 24 months after issue is built then, estimated, with no milestone (fix C1)', () => {
+  const A = require('../js/areas.js');
+  const mk = (municipality, ref, issued, extra = {}) => ({ municipality, kind: 'permit', ref, units: 1, type: 'Residential', description: 'New — Construct Detached - Model: Capilano (BB)', statusRaw: 'Issued', phase: 'permit', events: [ev(issued, 'permit')], ...extra });
+  const old = mk('Caledon', '21 101', '2021-03-01'), recent = mk('Caledon', '25 102', '2025-03-01'), bram = mk('Brampton', '21-103', '2021-03-01'), tower = mk('Caledon', '21 104', '2021-03-01', { units: 120 });
+  const asOf = Date.UTC(2026, 9, 19);
+  assert.equal(P.closeOpenCaledonHouses([old, recent, bram, tower], asOf), 1);
+  assert.equal(P.OPEN_HOUSE_MONTHS, 24);
+  assert.deepEqual([old.phase, recent.phase, bram.phase, tower.phase], ['completed', 'permit', 'permit', 'permit'], 'Caledon houses only, once 24 months have passed');
+  assert.equal(old.events.some(e => e.phase === 'completed'), false, 'no completion event: an estimate is no milestone');
+  const c = A.completedAt(old);
+  assert.deepEqual([new Date(c.date).toISOString().slice(0, 7), c.estimated], ['2023-03', true]);
+});

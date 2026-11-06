@@ -115,6 +115,8 @@
       const stg = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
       if (stg.length) return { date: Math.max(...stg) + STAGED_LAG_MONTHS * MONTH, estimated: true };
     }
+    // (a Caledon house permit left open: js/phases.js closeOpenCaledonHouses dates it)
+    if (r.estimatedCompletion != null) return { date: r.estimatedCompletion, estimated: true };
     const done = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
     if (done.length) return { date: Math.max(...done), estimated: !!r.completedEstimated };
     const issued = r.events.filter(e => e.phase === 'permit').map(e => +e.date);
