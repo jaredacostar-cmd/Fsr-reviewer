@@ -295,3 +295,39 @@ What else C1 moves, because those houses become built across the app:
 |---|---|
 | 21 | **C1 applied everywhere:** a Caledon house left open is built across the app (Built layer, built since the census, the DC gate rebuilt, three development keys changed). Its estimated date is no milestone, so the forecast curves do not learn from it. |
 | 22 | **N = 24 months is provisional.** The owner asked how to measure N accurately. The options are being reviewed. |
+
+## Bucket 4a: measuring Caledon's build time from aerial photos (pilot, 2026-11-06)
+
+**Decision 23 (owner):** measure N from Caledon's yearly aerial photos instead of fitting it to CMHC's
+totals. A personal cloud environment, `fsr-reviewer`, allows `utility.arcgis.com`, where Caledon's
+permit feed and photos are served.
+
+**Method:**
+- **Population:** Caledon house permits (1–19 units, new homes, not suites), first issued
+  2019-01 to 2024-06, "Issued" or "Closed": **3,046 permits** (1,174 open, 1,872 closed).
+- **Sample:** a seeded draw (seed 20261106), stratified by status and issue year: **149 permits** (75
+  open, 74 closed; 38 of the open ones issued 2022–2024). `scripts/caledon-aerial/population.js` →
+  `docs/completions-calibration/caledon-aerial-sample.json`.
+- **Strips:** each permit's lot in every yearly photo from the year before issue to 2025, at
+  0.26 m/pixel, with the permit's point circled (`scripts/caledon-aerial/strips.py`). The judgement is
+  the first year a roofed house stands, and the year work is first seen under way.
+- **Caledon's permit feed has no completion or closing date** (it has issue, cancel and revoke dates
+  only), so the photos are the only measure. It does have `SECUNIT_YN`, which may settle the "(BB)"
+  question later.
+
+**Pilot (10 permits: 5 open, 5 closed; `docs/completions-calibration/caledon-aerial-pilot.json`):**
+- **Every one was built, roofed in the first photo after the issue year.** Permits issued
+  May–December 2019 were roofed by the 2020 photo, and those issued June 2020 by the 2021 photo.
+- **Read as months:** roughly **8–12 months to a roof**, before finishing. That matches CMHC's own
+  Caledon construction time (about 11 months for singles, 15 for rows) and the app's +12 months for
+  closed permits. **It is half the fitted N = 24.**
+- **All 5 open permits (issued 2019–2020) were built within about a year**, while still "Issued" in
+  2026.
+
+**What the pilot showed about the method:**
+- **Location is reliable.** The photos print house numbers, and each point fell on the right lot. A
+  large rural lot needs judging by parcel, since the point sits on the parcel label.
+- **Image quality is good enough:** footings, framing and a finished roof are distinct at 0.26 m.
+- **Flight dates are not in the services' metadata**, only the year. Most years are leaf-off (spring);
+  2023 and 2025 look leaf-on (summer). So a lag is known to within one photo interval, about ±6 months.
+- **Coverage gaps:** one 2018 photo was blank at a permit's point.

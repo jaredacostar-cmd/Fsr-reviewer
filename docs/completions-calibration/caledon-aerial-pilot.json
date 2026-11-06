@@ -1,0 +1,16 @@
+{
+ "about": "Bucket 4 pilot: the first year a roofed house stands at each permit's lot in Caledon's yearly orthophotos (js/config.js imagery.Caledon). underConstruction: the photo year showing work under way (footings, framing) before the roof. Judged by eye from strips drawn by scripts/caledon-aerial/strips.py.",
+ "judged": "2026-11-06",
+ "results": [
+  { "n": 1, "ref": "2019-0332", "status": "open", "issued": "2019-07-30", "type": "single", "firstRoofed": 2020, "underConstruction": null, "note": "large rural lot; house east of the parcel label" },
+  { "n": 2, "ref": "2019-0089", "status": "open", "issued": "2019-06-13", "type": "single", "firstRoofed": 2020, "underConstruction": null, "note": "2020 roofed with site clutter; finished, cars in 2021" },
+  { "n": 3, "ref": "2019-0549", "status": "open", "issued": "2019-12-23", "type": "row", "firstRoofed": 2021, "underConstruction": 2020, "note": "" },
+  { "n": 4, "ref": "2020-0216", "status": "open", "issued": "2020-06-16", "type": "single", "firstRoofed": 2021, "underConstruction": 2020, "note": "" },
+  { "n": 5, "ref": "2020-0242", "status": "open", "issued": "2020-06-16", "type": "single", "firstRoofed": 2021, "underConstruction": null, "note": "2020 photo: graded lot" },
+  { "n": 6, "ref": "2019-0165", "status": "closed", "issued": "2019-05-08", "type": "row", "firstRoofed": 2020, "underConstruction": null, "note": "" },
+  { "n": 7, "ref": "2019-0904", "status": "closed", "issued": "2019-12-23", "type": "row", "firstRoofed": 2021, "underConstruction": 2020, "note": "2020: roof trusses being framed" },
+  { "n": 8, "ref": "2019-0492", "status": "closed", "issued": "2019-08-29", "type": "row", "firstRoofed": 2020, "underConstruction": 2019, "note": "2019: excavation" },
+  { "n": 9, "ref": "2019-0176", "status": "closed", "issued": "2019-05-01", "type": "row", "firstRoofed": 2020, "underConstruction": null, "note": "" },
+  { "n": 10, "ref": "2019-0428", "status": "closed", "issued": "2019-09-04", "type": "single", "firstRoofed": 2020, "underConstruction": null, "note": "demolish/rebuild: old house 2019, new house 2020; no 2018 photo coverage here" }
+ ]
+}
