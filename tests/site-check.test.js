@@ -23,6 +23,7 @@ siteTest('Bovaird: in review', () => assert.equal(1, 1));\n`);
   const lines = fs.readFileSync(report, 'utf8').trim().split('\n').map(JSON.parse);
   assert.deepEqual(lines.map(l => l.test), ['Embleton: 343 left to permit'], 'only the changed one');
   assert.match(lines[0].message, /left to permit/);
+  assert.match(lines[0].message, /299 !== 343/, 'and the two values');
 });
 
 test('a changed site check reports what changed, not only that it did', () => {
@@ -38,6 +39,25 @@ siteTest('295 Queen St E: files, root, units', () => assert.deepEqual([8, 'OZS-2
   assert.match(message, /^Expected values to be strictly deep-equal:/);
   assert.match(message, /\+ 8,/, 'the new value');
   assert.match(message, /- 7,/, 'the old one');
+  assert.doesNotMatch(message, /'OZS-2025-0022'/, 'not the lines that did not change');
+});
+
+// A plain comparison prints no diff, only "18 !== 17" under its first line: that line is the finding.
+test('a changed count or word reports both values', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'site-check-'));
+  const file = path.join(dir, 'x.test.js'), report = path.join(dir, 'report.jsonl');
+  fs.writeFileSync(file, `const { siteTest } = require(${JSON.stringify(path.join(__dirname, 'helpers', 'site-check.js'))});
+const assert = require('node:assert/strict');
+siteTest('Airport Rd: 17 records', () => assert.equal(18, 17));
+siteTest('Bovaird: stage', () => assert.equal('approved', 'review'));
+siteTest('Embleton: has a draft plan', () => assert.ok(false, 'no draft plan on file'));\n`);
+  const base = { ...process.env }; delete base.NODE_TEST_CONTEXT;
+  const warn = spawnSync(process.execPath, ['--test', file], { env: { ...base, SITE_CHECKS: 'warn', SITE_CHECKS_REPORT: report }, encoding: 'utf8' });
+  assert.equal(warn.status, 0, warn.stdout);
+  const by = Object.fromEntries(fs.readFileSync(report, 'utf8').trim().split('\n').map(JSON.parse).map(l => [l.test, l.message]));
+  assert.equal(by['Airport Rd: 17 records'], 'Expected values to be strictly equal: 18 !== 17');
+  assert.equal(by['Bovaird: stage'], "Expected values to be strictly equal: + 'approved' - 'review'");
+  assert.equal(by['Embleton: has a draft plan'], 'no draft plan on file');
 });
 
 test('the site-pinned tests use it; totals and privacy stay strict', () => {
